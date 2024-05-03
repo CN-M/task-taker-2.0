@@ -1,0 +1,62 @@
+curl -X GET http://localhost:3000
+
+curl -X GET http://localhost:3000 \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk"
+
+
+curl -X POST http://localhost:3000/account/register \
+-H 'Content-Type: application/json' \
+-d '{"email": "jim@gmail.com", "firstName": "Jim", "lastName": "Gaffigan", "password": "12345"}'
+
+curl -X POST http://localhost:3000/account/login \
+-H 'Content-Type: application/json' \
+-d '{"email": "cn@gmail.com", "password": "12345"}'
+
+curl -X POST http://localhost:3000/ \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk" \
+-d '{"task": "Wash clothes"}'
+
+curl -X POST http://localhost:3000/ \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk" \
+-d '{"task": "Finish writing the report"}'
+
+curl -X PUT http://localhost:3000/account \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk" \
+-d '{"firstName": "C.N."}'
+
+
+curl -X POST http://localhost:3000/ \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk" \
+-d '{"task": "Finish the other report"}'
+
+curl -X DELETE http://localhost:3000/account \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzE0NzI3OTI2LCJleHAiOjE3MTUxNTk5MjZ9.l60XiPt3_GuL87q6C0eAL7d-3XRbX0GL1Gb3fNRnSkA" \
+
+@types/passport
+
+
+pnpm uninstall ejs passport passport-local express-session @types/express-session @types/passport-local @types/passport
+
+curl -X DELETE http://localhost:3000/33 \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk"
+
+curl -X PUT http://localhost:3000/1 \
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk"
+
+
+curl -X POST http://localhost:3000/users -H 'Content-Type: application/json' -d '{"email": "jake@email.com", "name": "Jake T. Austin"}'
+
+curl -X POST http://localhost:3000/ -H 'Content-Type: application/json' -d '{ "content":"This is a tweet", "email": "email@email.com"}'
+
+curl -X PUT  http://localhost:3000 -H 'Content-Type: application/json' -d '{"name": "Ntsako", "occupation": "Software Engineer"}'
+
+curl -X DELETE  http://localhost:3000 -H 'Content-Type: application/json' -d '{"name": "Ntsako", "occupation": "Software Engineer"}'
+
+curl -X POST http://localhost:3000 -H 'Content-Type: application/json' -d '{"Content": "Ntsako", "occupation": "Software Engineer"}'
