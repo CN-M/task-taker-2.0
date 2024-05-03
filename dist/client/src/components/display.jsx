@@ -11,11 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Display = void 0;
 const react_1 = require("react");
+const authStore_1 = require("../lib/authStore");
 const utils_1 = require("../lib/utils");
 const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
+    const user = (0, authStore_1.useAuthStore)((state) => state.user);
+    console.log(user);
     const deleteTask = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const res = yield fetch("http://localhost:3000/", {
+            const res = yield fetch(`http://localhost:3000/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,7 +70,7 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
             }
         });
         getData();
-    }, [setIsLoading, setTodos]);
+    }, [setIsLoading, setTodos, user]);
     return (<div className=" ">
       <div className="space-y-3">
         {isLoading ? (<p>Loading tasks...</p>) : (<>

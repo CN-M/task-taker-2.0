@@ -9,14 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignUpForm = void 0;
+exports.LoginForm = void 0;
 const react_1 = require("react");
-const SignUpForm = () => {
+const authStore_1 = require("../lib/authStore");
+const LoginForm = () => {
     const [email, setEmail] = (0, react_1.useState)("");
     const [password, setPassword] = (0, react_1.useState)("");
-    const signUp = () => __awaiter(void 0, void 0, void 0, function* () {
+    const loginThing = (0, authStore_1.useAuthStore)((state) => state.login);
+    const login = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const res = yield fetch("http://localhost:3000/sign-up", {
+            const res = yield fetch("http://localhost:3000/account/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -28,6 +30,7 @@ const SignUpForm = () => {
             }
             const data = yield res.json();
             console.log(data);
+            loginThing(data);
             return data;
         }
         catch (err) {
@@ -37,24 +40,24 @@ const SignUpForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleTask = (e) => {
         e.preventDefault();
-        signUp();
+        login();
         setEmail("");
         setPassword("");
     };
     return (<div className="flex flex-col p-10 space-y-5">
-      <h1>Sign Up</h1>
+      <h1>Log In</h1>
       <h2 className="text-xl font-sans">
-        Don't have an account? Sign up to make the best of Task Taker
+        Log in to make the best of Task Taker
       </h2>
       <div className="flex flex-col items-center">
         <form onSubmit={handleTask} className="flex flex-col space-y-3">
           <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="email" placeholder="hulk@hogan.com" value={email} onChange={(e) => setEmail(e.target.value)}/>
           <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
           <button className="p-3 rounded-md bg-emerald-600 text-white" type="submit">
-            Sign Up
+            Log In
           </button>
         </form>
       </div>
     </div>);
 };
-exports.SignUpForm = SignUpForm;
+exports.LoginForm = LoginForm;

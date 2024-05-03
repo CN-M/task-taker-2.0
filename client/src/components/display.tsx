@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { useAuthStore } from "../lib/authStore";
 import { cn } from "../lib/utils";
 import { Todo } from "../types";
 
@@ -13,9 +14,13 @@ export const Display = ({
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const user = useAuthStore((state) => state.user);
+
+  console.log(user);
+
   const deleteTask = async (id: number) => {
     try {
-      const res = await fetch("http://localhost:3000/", {
+      const res = await fetch(`http://localhost:3000/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +80,7 @@ export const Display = ({
     };
 
     getData();
-  }, [setIsLoading, setTodos]);
+  }, [setIsLoading, setTodos, user]);
 
   return (
     <div className=" ">

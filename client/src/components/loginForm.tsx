@@ -9,7 +9,7 @@ export const LoginForm = () => {
 
   const login = async () => {
     try {
-      const res = await fetch("http://localhost:3000/log-in", {
+      const res = await fetch("http://localhost:3000/account/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,8 +24,7 @@ export const LoginForm = () => {
       const data = await res.json();
       console.log(data);
 
-      const userData = { username: "example", email: "example@example.com" };
-      loginThing(userData);
+      loginThing(data);
 
       return data;
     } catch (err) {
