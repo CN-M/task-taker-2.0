@@ -18,6 +18,14 @@ declare global {
   }
 }
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
+  }
+}
+
 export const protect = async (
   req: Request,
   res: Response,
