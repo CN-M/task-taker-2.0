@@ -15,11 +15,11 @@ export const getTasks = async (req: Request, res: Response) => {
       where: { authorId: id },
     });
 
-    if (tasks.length === 0) {
-      res.status(400).json({ message: "No tasks to display" });
-    } else {
-      res.status(200).json(tasks);
-    }
+    // if (tasks.length === 0) {
+    //   res.status(400).json({ message: "No tasks to display" });
+    // } else {
+    res.status(200).json(tasks);
+    // }
   } catch (err) {
     console.error("Error fetching tasks:", err);
     res.status(500).json({ error: "Internal server error." });

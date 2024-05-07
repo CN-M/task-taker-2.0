@@ -22,12 +22,11 @@ const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const tasks = yield db_1.prisma.task.findMany({
             where: { authorId: id },
         });
-        if (tasks.length === 0) {
-            res.status(400).json({ message: "No tasks to display" });
-        }
-        else {
-            res.status(200).json(tasks);
-        }
+        // if (tasks.length === 0) {
+        //   res.status(400).json({ message: "No tasks to display" });
+        // } else {
+        res.status(200).json(tasks);
+        // }
     }
     catch (err) {
         console.error("Error fetching tasks:", err);

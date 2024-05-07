@@ -1,6 +1,8 @@
 curl -X GET http://localhost:3000
 
 curl -X GET http://localhost:3000 \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNzE1MDg4NDYwLCJleHAiOjE3MTU1MjA0NjB9.nuCUc0nVzC8FP955RYvQFy4KERFxEsOdgTDDoPz9fuc"
+
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk"
 
 
@@ -8,13 +10,17 @@ curl -X POST http://localhost:3000/account/register \
 -H 'Content-Type: application/json' \
 -d '{"email": "jim@gmail.com", "firstName": "Jim", "lastName": "Gaffigan", "password": "12345"}'
 
+curl -X POST http://localhost:3000/account/register \
+-H 'Content-Type: application/json' \
+-d '{"email": "tan@gmail.com", "firstName": "John", "lastName": "Tan", "password": "12345"}'
+
 curl -X POST http://localhost:3000/account/login \
 -H 'Content-Type: application/json' \
--d '{"email": "cn@gmail.com", "password": "12345"}'
+-d '{"email": "jake@gmail.com", "password": "12345"}'
 
 curl -X POST http://localhost:3000/ \
 -H 'Content-Type: application/json' \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzE0NzI0MzkwLCJleHAiOjE3MTUxNTYzOTB9.4EGJ0_q6WcczHGH3nN_3-lvbDqwFZTdRX7GijiSm5mk" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE1MDg4NTM5LCJleHAiOjE3MTU1MjA1Mzl9.MmFgIdyaShYPhfruyBhzcS1qkfdv9cfVWh3YjzjygKM" \
 -d '{"task": "Wash clothes"}'
 
 curl -X POST http://localhost:3000/ \

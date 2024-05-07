@@ -9,13 +9,14 @@ function App() {
   return (
     <>
       <Router>
-        <div className="h-full w-full flex flex-col justify-center space-y-4"></div>
-        <h1>Task Taker</h1>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <div className="h-full w-full flex flex-col justify-center space-y-4">
+          <h1>Task Taker</h1>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </div>
       </Router>
     </>
   );

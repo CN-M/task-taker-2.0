@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 import { cn } from "../lib/utils";
 import { Todo } from "../types";
@@ -14,9 +15,11 @@ export const Display = ({
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  console.log(user);
+  // console.log(user);
 
   const deleteTask = async (id: number) => {
     try {
@@ -24,6 +27,7 @@ export const Display = ({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({ id }),
       });
@@ -42,12 +46,12 @@ export const Display = ({
 
   const updateTask = async (id: number) => {
     try {
-      const res = await fetch("http://localhost:3000/", {
+      const res = await fetch(`http://localhost:3000/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
         },
-        body: JSON.stringify({ id }),
       });
 
       if (res.ok) {
@@ -68,7 +72,13 @@ export const Display = ({
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await fetch("http://localhost:3000/");
+        const res = await fetch("http://localhost:3000/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
         const data = await res.json();
 
         setTodos(data);
@@ -79,17 +89,28 @@ export const Display = ({
       }
     };
 
-    getData();
-  }, [setIsLoading, setTodos, user]);
+    if (!user && isAuthenticated == false) {
+      navigate("/login");
+    } else {
+      getData();
+    }
+  }, [user, isAuthenticated, navigate, setIsLoading, setTodos]);
 
   return (
     <div className=" ">
+      {user && isAuthenticated ? (
+        <div className="text-xl p-5">
+          Hello, {user.firstName}. Here are your tasks:
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="space-y-3">
         {isLoading ? (
           <p>Loading tasks...</p>
         ) : (
           <>
-            {todos.length < 1 ? (
+            {todos?.length < 1 ? (
               <h3>You have no tasks to display</h3>
             ) : (
               todos?.map(({ task, id, completed }) => (

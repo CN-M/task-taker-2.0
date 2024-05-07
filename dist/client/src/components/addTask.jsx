@@ -10,13 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddTask = void 0;
+const authStore_1 = require("../lib/authStore");
 const AddTask = ({ task, setTask, todos, setTodos, }) => {
+    const user = (0, authStore_1.useAuthStore)((state) => state.user);
     const addTask = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const res = yield fetch("http://localhost:3000/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
                 },
                 body: JSON.stringify({ task, email: "cn@gmail.com" }),
             });

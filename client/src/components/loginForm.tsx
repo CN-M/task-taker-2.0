@@ -1,44 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const loginThing = useAuthStore((state) => state.login);
+  const login = useAuthStore((state) => state.login);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
 
-  const login = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/account/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to sign user up!");
-      }
-
-      const data = await res.json();
-      console.log(data);
-
-      loginThing(data);
-
-      return data;
-    } catch (err) {
-      console.error("Error:", err);
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      navigate("/");
     }
-  };
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleTask = (e: any) => {
+  const handleLogin = (e: any) => {
     e.preventDefault();
 
-    login();
-    setEmail("");
-    setPassword("");
+    try {
+      login({ email, password });
+    } catch (err) {
+      console.error("Error", err);
+    }
   };
 
   return (
@@ -48,20 +36,24 @@ export const LoginForm = () => {
         Log in to make the best of Task Taker
       </h2>
       <div className="flex flex-col items-center">
-        <form onSubmit={handleTask} className="flex flex-col space-y-3">
+        <form onSubmit={handleLogin} className="flex flex-col space-y-3">
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
             type="email"
             placeholder="hulk@hogan.com"
             value={email}
+            autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
             type="password"
+            autoComplete="current-password"
             placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"

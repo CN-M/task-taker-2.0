@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { useAuthStore } from "../lib/authStore";
 import { Todo } from "../types";
 
 export const AddTask = ({
@@ -12,12 +13,15 @@ export const AddTask = ({
   todos: Todo[];
   setTodos: Dispatch<SetStateAction<Todo[]>>;
 }) => {
+  const user = useAuthStore((state) => state.user);
+
   const addTask = async () => {
     try {
       const res = await fetch("http://localhost:3000/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({ task, email: "cn@gmail.com" }),
       });

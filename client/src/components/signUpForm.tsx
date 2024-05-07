@@ -1,44 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 
 export const SignUpForm = () => {
+  const navigate = useNavigate();
+
+  const [firstName, setFirstname] = useState("");
+  const [lastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const register = useAuthStore((state) => state.register);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
 
-  const signUp = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to sign user up!");
-      }
-
-      const data = await res.json();
-      console.log(data);
-
-      register(data);
-
-      return data;
-    } catch (err) {
-      console.error("Error:", err);
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      navigate("/");
     }
-  };
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleTask = (e: any) => {
+  const handleRegister = (e: any) => {
     e.preventDefault();
 
-    signUp();
-    setEmail("");
-    setPassword("");
+    try {
+      register({ email, firstName, lastName, password });
+    } catch (err) {
+      console.error("Error", err);
+    }
   };
 
   return (
@@ -48,20 +38,42 @@ export const SignUpForm = () => {
         Don't have an account? Sign up to make the best of Task Taker
       </h2>
       <div className="flex flex-col items-center">
-        <form onSubmit={handleTask} className="flex flex-col space-y-3">
+        <form onSubmit={handleRegister} className="flex flex-col space-y-3">
+          <div className="flex gap-2 justify-between">
+            <input
+              className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
+              type="text"
+              placeholder="Ntsako"
+              value={firstName}
+              onChange={(e) => setFirstname(e.target.value)}
+              required
+            />
+            <input
+              className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
+              type="text"
+              placeholder="Mbhalati"
+              value={lastName}
+              onChange={(e) => setLastname(e.target.value)}
+              required
+            />
+          </div>
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
             type="email"
             placeholder="hulk@hogan.com"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
             type="password"
             placeholder="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"
