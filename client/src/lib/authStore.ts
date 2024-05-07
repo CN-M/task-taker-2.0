@@ -7,7 +7,9 @@ const user = JSON.parse(localStorage.getItem("user")!);
 interface AuthState {
   isAuthenticated: boolean;
   isError: boolean;
+  isLoading: boolean;
   user: User | null;
+  errorMessage: string;
   login: (userData: { email: string; password: string }) => void;
   logout: () => void;
   register: (userData: {
@@ -18,32 +20,26 @@ interface AuthState {
   }) => void;
 }
 
-// type StateState = {
-//   user: User | null;
-//   isError: boolean;
-//   isSuccess: boolean;
-//   isLoading: boolean;
-//   message: string;
-// };
-
-// const initialState: StateState = {
-//   user: user ? user : null,
-//   isError: false,
-//   isSuccess: false,
-//   isLoading: false,
-//   message: "",
-// };
-
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: user ? true : false,
-  user: user ? user : null,
   isError: false,
+  isLoading: false,
+  user: user ? user : null,
+  errorMessage: "",
   login: async (userData: { email: string; password: string }) => {
+    set({ isLoading: true, isError: false, errorMessage: "" });
     try {
       const data: User = await login(userData);
       set({ isAuthenticated: true, user: data });
-    } catch (err) {
-      set({ isError: true });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      set({
+        isError: true,
+        errorMessage: err.message || "An error occurred during login",
+      });
+    } finally {
+      set({ isLoading: false });
     }
   },
 
@@ -53,21 +49,36 @@ export const useAuthStore = create<AuthState>((set) => ({
     email: string;
     password: string;
   }) => {
+    set({ isLoading: true, isError: false, errorMessage: "" });
     try {
       const data: User = await register(userData);
-      console.log("Registered user:", data);
       set({ isAuthenticated: true, user: data });
-    } catch (err) {
-      set({ isError: true });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      set({
+        isError: true,
+        errorMessage: err.message || "An error occurred during registration",
+      });
+    } finally {
+      set({ isLoading: false });
     }
   },
 
   logout: () => {
+    set({ isLoading: true, isError: false, errorMessage: "" });
     try {
       logout();
       set({ isAuthenticated: false, user: null });
-    } catch (err) {
-      set({ isError: true });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      set({
+        isError: true,
+        errorMessage: err.message || "An error occurred during logout",
+      });
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));
@@ -86,9 +97,10 @@ const register = async (userData: {
   if (response.data) {
     const { data } = response;
     localStorage.setItem("user", JSON.stringify(data));
+    return data;
+  } else {
+    throw new Error("Registration failed");
   }
-
-  return response.data;
 };
 
 const login = async (userData: { email: string; password: string }) => {
@@ -100,9 +112,10 @@ const login = async (userData: { email: string; password: string }) => {
   if (response.data) {
     const { data } = response;
     localStorage.setItem("user", JSON.stringify(data));
+    return data;
+  } else {
+    throw new Error("Login failed");
   }
-
-  return response.data;
 };
 
 const logout = () => {

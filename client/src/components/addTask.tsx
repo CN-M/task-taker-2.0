@@ -17,13 +17,17 @@ export const AddTask = ({
 
   const addTask = async () => {
     try {
+      if (!user || !user.token) {
+        throw new Error("User not authenticated or token not available.");
+      }
+
       const res = await fetch("http://localhost:3000/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ task, email: "cn@gmail.com" }),
+        body: JSON.stringify({ task }),
       });
 
       if (!res.ok) {
@@ -32,7 +36,6 @@ export const AddTask = ({
 
       const data = await res.json();
 
-      // const newTodo: Todo = {
       const newTodo: Todo = {
         id: data.id,
         task: task,
@@ -40,23 +43,22 @@ export const AddTask = ({
 
       setTodos([...todos, newTodo]);
 
+      setTask("");
+
       return data;
     } catch (err) {
       console.error("Error:", err);
     }
   };
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
     setTask(e.target.value);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleTask = (e: any) => {
+  const handleTask = async (e: any) => {
     e.preventDefault();
-
-    addTask();
-    setTask("");
+    await addTask();
   };
 
   return (

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpForm = void 0;
 const react_1 = require("react");
@@ -10,6 +19,8 @@ const SignUpForm = () => {
     const [lastName, setLastname] = (0, react_1.useState)("");
     const [email, setEmail] = (0, react_1.useState)("");
     const [password, setPassword] = (0, react_1.useState)("");
+    const [loading, setLoading] = (0, react_1.useState)(false);
+    const [error, setError] = (0, react_1.useState)("");
     const register = (0, authStore_1.useAuthStore)((state) => state.register);
     const isAuthenticated = (0, authStore_1.useAuthStore)((state) => state.isAuthenticated);
     const user = (0, authStore_1.useAuthStore)((state) => state.user);
@@ -17,17 +28,24 @@ const SignUpForm = () => {
         if (user && isAuthenticated) {
             navigate("/");
         }
-    });
+    }, [user, isAuthenticated, navigate]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleRegister = (e) => {
+    const handleRegister = (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
+        setLoading(true);
+        setError("");
         try {
             register({ email, firstName, lastName, password });
+            // Successful registration will navigate the user automatically
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
-            console.error("Error", err);
+            setError(err.message || "An error occurred during registration.");
         }
-    };
+        finally {
+            setLoading(false);
+        }
+    });
     return (<div className="flex flex-col p-10 space-y-5">
       <h1>Sign Up</h1>
       <h2 className="text-xl font-sans">
@@ -41,9 +59,10 @@ const SignUpForm = () => {
           </div>
           <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="email" placeholder="hulk@hogan.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
           <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="password" placeholder="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
-          <button className="p-3 rounded-md bg-emerald-600 text-white" type="submit">
-            Sign Up
+          <button className="p-3 rounded-md bg-emerald-600 text-white" type="submit" disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
+          {error && <p className="text-red-500 text-sm">{`Error: ${error}`}</p>}
         </form>
       </div>
     </div>);

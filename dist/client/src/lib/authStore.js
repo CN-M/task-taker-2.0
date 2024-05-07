@@ -16,50 +16,61 @@ exports.useAuthStore = void 0;
 const axios_1 = __importDefault(require("axios"));
 const zustand_1 = require("zustand");
 const user = JSON.parse(localStorage.getItem("user"));
-// type StateState = {
-//   user: User | null;
-//   isError: boolean;
-//   isSuccess: boolean;
-//   isLoading: boolean;
-//   message: string;
-// };
-// const initialState: StateState = {
-//   user: user ? user : null,
-//   isError: false,
-//   isSuccess: false,
-//   isLoading: false,
-//   message: "",
-// };
 exports.useAuthStore = (0, zustand_1.create)((set) => ({
     isAuthenticated: user ? true : false,
-    user: user ? user : null,
     isError: false,
+    isLoading: false,
+    user: user ? user : null,
+    errorMessage: "",
     login: (userData) => __awaiter(void 0, void 0, void 0, function* () {
+        set({ isLoading: true, isError: false, errorMessage: "" });
         try {
             const data = yield login(userData);
             set({ isAuthenticated: true, user: data });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
-            set({ isError: true });
+            set({
+                isError: true,
+                errorMessage: err.message || "An error occurred during login",
+            });
+        }
+        finally {
+            set({ isLoading: false });
         }
     }),
     register: (userData) => __awaiter(void 0, void 0, void 0, function* () {
+        set({ isLoading: true, isError: false, errorMessage: "" });
         try {
             const data = yield register(userData);
-            console.log("Registered user:", data);
             set({ isAuthenticated: true, user: data });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
-            set({ isError: true });
+            set({
+                isError: true,
+                errorMessage: err.message || "An error occurred during registration",
+            });
+        }
+        finally {
+            set({ isLoading: false });
         }
     }),
     logout: () => {
+        set({ isLoading: true, isError: false, errorMessage: "" });
         try {
             logout();
             set({ isAuthenticated: false, user: null });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
-            set({ isError: true });
+            set({
+                isError: true,
+                errorMessage: err.message || "An error occurred during logout",
+            });
+        }
+        finally {
+            set({ isLoading: false });
         }
     },
 }));
@@ -68,16 +79,22 @@ const register = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     if (response.data) {
         const { data } = response;
         localStorage.setItem("user", JSON.stringify(data));
+        return data;
     }
-    return response.data;
+    else {
+        throw new Error("Registration failed");
+    }
 });
 const login = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield axios_1.default.post("http://localhost:3000/account/login", userData);
     if (response.data) {
         const { data } = response;
         localStorage.setItem("user", JSON.stringify(data));
+        return data;
     }
-    return response.data;
+    else {
+        throw new Error("Login failed");
+    }
 });
 const logout = () => {
     localStorage.removeItem("user");

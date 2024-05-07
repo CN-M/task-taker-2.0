@@ -9,6 +9,8 @@ export const SignUpForm = () => {
   const [lastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const register = useAuthStore((state) => state.register);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -18,16 +20,22 @@ export const SignUpForm = () => {
     if (user && isAuthenticated) {
       navigate("/");
     }
-  });
+  }, [user, isAuthenticated, navigate]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleRegister = (e: any) => {
+  const handleRegister = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
       register({ email, firstName, lastName, password });
-    } catch (err) {
-      console.error("Error", err);
+      // Successful registration will navigate the user automatically
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.message || "An error occurred during registration.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,9 +86,11 @@ export const SignUpForm = () => {
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"
             type="submit"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
+          {error && <p className="text-red-500 text-sm">{`Error: ${error}`}</p>}
         </form>
       </div>
     </div>

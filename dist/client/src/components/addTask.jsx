@@ -15,24 +15,27 @@ const AddTask = ({ task, setTask, todos, setTodos, }) => {
     const user = (0, authStore_1.useAuthStore)((state) => state.user);
     const addTask = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            if (!user || !user.token) {
+                throw new Error("User not authenticated or token not available.");
+            }
             const res = yield fetch("http://localhost:3000/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
+                    Authorization: `Bearer ${user.token}`,
                 },
-                body: JSON.stringify({ task, email: "cn@gmail.com" }),
+                body: JSON.stringify({ task }),
             });
             if (!res.ok) {
                 throw new Error("Failed to add task!");
             }
             const data = yield res.json();
-            // const newTodo: Todo = {
             const newTodo = {
                 id: data.id,
                 task: task,
             };
             setTodos([...todos, newTodo]);
+            setTask("");
             return data;
         }
         catch (err) {
@@ -44,11 +47,10 @@ const AddTask = ({ task, setTask, todos, setTodos, }) => {
         setTask(e.target.value);
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleTask = (e) => {
+    const handleTask = (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
-        addTask();
-        setTask("");
-    };
+        yield addTask();
+    });
     return (<div className="flex flex-col p-10 space-y-5">
       <form onSubmit={handleTask} className="flex flex-col space-y-3">
         <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="text" placeholder="Take out the trash" value={task} onChange={handleChange}/>

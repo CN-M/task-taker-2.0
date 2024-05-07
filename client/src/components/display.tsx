@@ -19,8 +19,6 @@ export const Display = ({
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  // console.log(user);
-
   const deleteTask = async (id: number) => {
     try {
       const res = await fetch(`http://localhost:3000/${id}`, {
@@ -100,7 +98,7 @@ export const Display = ({
     <div className=" ">
       {user && isAuthenticated ? (
         <div className="text-xl p-5">
-          Hello, {user.firstName}. Here are your tasks:
+          Hey, {user.firstName}! Here are your tasks:
         </div>
       ) : (
         <></>

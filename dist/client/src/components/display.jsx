@@ -18,7 +18,6 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
     const navigate = (0, react_router_dom_1.useNavigate)();
     const user = (0, authStore_1.useAuthStore)((state) => state.user);
     const isAuthenticated = (0, authStore_1.useAuthStore)((state) => state.isAuthenticated);
-    // console.log(user);
     const deleteTask = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const res = yield fetch(`http://localhost:3000/${id}`, {
@@ -88,7 +87,7 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
     }, [user, isAuthenticated, navigate, setIsLoading, setTodos]);
     return (<div className=" ">
       {user && isAuthenticated ? (<div className="text-xl p-5">
-          Hello, {user.firstName}. Here are your tasks:
+          Hey, {user.firstName}! Here are your tasks:
         </div>) : (<></>)}
       <div className="space-y-3">
         {isLoading ? (<p>Loading tasks...</p>) : (<>
