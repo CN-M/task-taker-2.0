@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AddTask } from "../components/addTask";
 import { Display } from "../components/display";
-import { LogoutButton } from "../components/logoutButton";
 
 import { Todo } from "../types";
 
@@ -12,19 +11,20 @@ export const Dashboard = () => {
 
   return (
     <>
-      <LogoutButton />
-      <Display
-        todos={todos}
-        setTodos={setTodos}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
-      <AddTask
-        task={task}
-        setTask={setTask}
-        todos={todos}
-        setTodos={setTodos}
-      />
+      <div>
+        <Display
+          todos={todos}
+          setTodos={setTodos}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+        />
+        <AddTask
+          task={task}
+          setTask={setTask}
+          todos={todos}
+          setTodos={setTodos}
+        />
+      </div>
     </>
   );
 };

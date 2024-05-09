@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import toast from "react-hot-toast";
 import { useAuthStore } from "../lib/authStore";
 import { Todo } from "../types";
 
@@ -42,12 +43,12 @@ export const AddTask = ({
       };
 
       setTodos([...todos, newTodo]);
-
       setTask("");
 
       return data;
     } catch (err) {
       console.error("Error:", err);
+      toast.error("Error adding task");
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,6 +71,7 @@ export const AddTask = ({
           placeholder="Take out the trash"
           value={task}
           onChange={handleChange}
+          required
         />
         <button
           className="p-3 rounded-md bg-emerald-600 text-white"

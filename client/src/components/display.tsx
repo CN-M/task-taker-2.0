@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 import { cn } from "../lib/utils";
@@ -18,6 +19,8 @@ export const Display = ({
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isError = useAuthStore((state) => state.isError);
+  const errorMessage = useAuthStore((state) => state.errorMessage);
 
   const deleteTask = async (id: number) => {
     try {
@@ -27,7 +30,6 @@ export const Display = ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.token}`,
         },
-        body: JSON.stringify({ id }),
       });
 
       if (res.ok) {
@@ -39,6 +41,7 @@ export const Display = ({
       return data;
     } catch (err) {
       console.error("Error:", err);
+      toast.error("Error deleting task");
     }
   };
 
@@ -64,10 +67,15 @@ export const Display = ({
       return data;
     } catch (err) {
       console.error("Error:", err);
+      toast.error("Error updating task");
     }
   };
 
   useEffect(() => {
+    if (isError) {
+      toast.error(errorMessage);
+    }
+
     const getData = async () => {
       try {
         const res = await fetch("http://localhost:3000/", {
@@ -92,18 +100,26 @@ export const Display = ({
     } else {
       getData();
     }
-  }, [user, isAuthenticated, navigate, setIsLoading, setTodos]);
+  }, [
+    user,
+    isAuthenticated,
+    navigate,
+    setIsLoading,
+    setTodos,
+    isError,
+    errorMessage,
+  ]);
 
   return (
     <div className=" ">
       {user && isAuthenticated ? (
-        <div className="text-xl p-5">
+        <h2 className="text-xl p-5 font-semibold">
           Hey, {user.firstName}! Here are your tasks:
-        </div>
+        </h2>
       ) : (
         <></>
       )}
-      <div className="space-y-3">
+      <div className="flex flex-col justify-center items-center space-y-3">
         {isLoading ? (
           <p>Loading tasks...</p>
         ) : (
@@ -115,9 +131,9 @@ export const Display = ({
                 <div
                   key={id}
                   onDoubleClick={() => updateTask(id)}
-                  className="border rounded-md p-3 border-emerald-300"
+                  className="w-full border rounded-md p-3 border-emerald-300"
                 >
-                  <div className="flex justify-around py-2 px-10 gap-3 hover:cursor-pointer">
+                  <div className="flex justify-around items-center py-2 px-10 gap-3 hover:cursor-pointer">
                     <p
                       className={cn(
                         "text-2xl",
@@ -128,7 +144,7 @@ export const Display = ({
                     </p>
                     <button
                       onClick={() => deleteTask(id)}
-                      className="bg-red-500 text-sm text-white tracking-widest border-none hover:bg-red-400"
+                      className="rounded-md px-4 py-3 bg-red-500 text-sm text-white tracking-widest border-none hover:bg-red-400"
                     >
                       Delete
                     </button>

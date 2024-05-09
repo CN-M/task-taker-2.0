@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Display = void 0;
 const react_1 = require("react");
+const react_hot_toast_1 = __importDefault(require("react-hot-toast"));
 const react_router_dom_1 = require("react-router-dom");
 const authStore_1 = require("../lib/authStore");
 const utils_1 = require("../lib/utils");
@@ -18,6 +22,8 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
     const navigate = (0, react_router_dom_1.useNavigate)();
     const user = (0, authStore_1.useAuthStore)((state) => state.user);
     const isAuthenticated = (0, authStore_1.useAuthStore)((state) => state.isAuthenticated);
+    const isError = (0, authStore_1.useAuthStore)((state) => state.isError);
+    const errorMessage = (0, authStore_1.useAuthStore)((state) => state.errorMessage);
     const deleteTask = (id) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const res = yield fetch(`http://localhost:3000/${id}`, {
@@ -26,7 +32,6 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
                 },
-                body: JSON.stringify({ id }),
             });
             if (res.ok) {
                 const result = todos.filter((todo) => todo.id !== id);
@@ -37,6 +42,7 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         }
         catch (err) {
             console.error("Error:", err);
+            react_hot_toast_1.default.error("Error deleting task");
         }
     });
     const updateTask = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -57,9 +63,13 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         }
         catch (err) {
             console.error("Error:", err);
+            react_hot_toast_1.default.error("Error updating task");
         }
     });
     (0, react_1.useEffect)(() => {
+        if (isError) {
+            react_hot_toast_1.default.error(errorMessage);
+        }
         const getData = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const res = yield fetch("http://localhost:3000/", {
@@ -84,19 +94,27 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         else {
             getData();
         }
-    }, [user, isAuthenticated, navigate, setIsLoading, setTodos]);
+    }, [
+        user,
+        isAuthenticated,
+        navigate,
+        setIsLoading,
+        setTodos,
+        isError,
+        errorMessage,
+    ]);
     return (<div className=" ">
-      {user && isAuthenticated ? (<div className="text-xl p-5">
+      {user && isAuthenticated ? (<h2 className="text-xl p-5 font-semibold">
           Hey, {user.firstName}! Here are your tasks:
-        </div>) : (<></>)}
-      <div className="space-y-3">
+        </h2>) : (<></>)}
+      <div className="flex flex-col justify-center items-center space-y-3">
         {isLoading ? (<p>Loading tasks...</p>) : (<>
-            {(todos === null || todos === void 0 ? void 0 : todos.length) < 1 ? (<h3>You have no tasks to display</h3>) : (todos === null || todos === void 0 ? void 0 : todos.map(({ task, id, completed }) => (<div key={id} onDoubleClick={() => updateTask(id)} className="border rounded-md p-3 border-emerald-300">
-                  <div className="flex justify-around py-2 px-10 gap-3 hover:cursor-pointer">
+            {(todos === null || todos === void 0 ? void 0 : todos.length) < 1 ? (<h3>You have no tasks to display</h3>) : (todos === null || todos === void 0 ? void 0 : todos.map(({ task, id, completed }) => (<div key={id} onDoubleClick={() => updateTask(id)} className="w-full border rounded-md p-3 border-emerald-300">
+                  <div className="flex justify-around items-center py-2 px-10 gap-3 hover:cursor-pointer">
                     <p className={(0, utils_1.cn)("text-2xl", completed ? "line-through" : "")}>
                       {task}
                     </p>
-                    <button onClick={() => deleteTask(id)} className="bg-red-500 text-sm text-white tracking-widest border-none hover:bg-red-400">
+                    <button onClick={() => deleteTask(id)} className="rounded-md px-4 py-3 bg-red-500 text-sm text-white tracking-widest border-none hover:bg-red-400">
                       Delete
                     </button>
                   </div>

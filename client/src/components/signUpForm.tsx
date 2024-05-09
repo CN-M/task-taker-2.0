@@ -9,41 +9,33 @@ export const SignUpForm = () => {
   const [lastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const isError = useAuthStore((state) => state.isError);
+  const errorMessage = useAuthStore((state) => state.errorMessage);
 
   const register = useAuthStore((state) => state.register);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (user && isAuthenticated) {
       navigate("/");
     }
-  }, [user, isAuthenticated, navigate]);
+  }, [user, isAuthenticated, navigate, isError, errorMessage]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      register({ email, firstName, lastName, password });
-      // Successful registration will navigate the user automatically
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || "An error occurred during registration.");
-    } finally {
-      setLoading(false);
-    }
+    register({ email, firstName, lastName, password });
   };
 
   return (
-    <div className="flex flex-col p-10 space-y-5">
-      <h1>Sign Up</h1>
-      <h2 className="text-xl font-sans">
-        Don't have an account? Sign up to make the best of Task Taker
+    <div className="flex flex-col p-10 items-center space-y-5">
+      <h2 className="text-2xl font-sans font-semibold">
+        Don't have an account?
+      </h2>
+      <h2 className="text-2xl font-sans font-semibold">
+        Sign up to make the best of Task Taker
       </h2>
       <div className="flex flex-col items-center">
         <form onSubmit={handleRegister} className="flex flex-col space-y-3">
@@ -51,7 +43,7 @@ export const SignUpForm = () => {
             <input
               className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
               type="text"
-              placeholder="Ntsako"
+              placeholder="Jack"
               value={firstName}
               onChange={(e) => setFirstname(e.target.value)}
               required
@@ -59,7 +51,7 @@ export const SignUpForm = () => {
             <input
               className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
               type="text"
-              placeholder="Mbhalati"
+              placeholder="Sparrow"
               value={lastName}
               onChange={(e) => setLastname(e.target.value)}
               required
@@ -86,11 +78,22 @@ export const SignUpForm = () => {
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
-          {error && <p className="text-red-500 text-sm">{`Error: ${error}`}</p>}
+          {isError && (
+            <p className="text-red-500 text-sm">{`Error: ${errorMessage}`}</p>
+          )}
+          <p className="text-sm">
+            Already have an account?{" "}
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/login")}
+            >
+              Login here
+            </span>
+          </p>
         </form>
       </div>
     </div>

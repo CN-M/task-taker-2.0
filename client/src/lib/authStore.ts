@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 import { create } from "zustand";
 import { User } from "../types";
 
@@ -31,13 +32,19 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data: User = await login(userData);
       set({ isAuthenticated: true, user: data });
+      toast.success("Successfully logged in!");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      const { error } = err.response.data;
+
       set({
         isError: true,
-        errorMessage: err.message || "An error occurred during login",
+        errorMessage:
+          err.response.data.error || "An error occurred during login",
       });
+
+      toast.error(error);
     } finally {
       set({ isLoading: false });
     }
@@ -53,13 +60,19 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data: User = await register(userData);
       set({ isAuthenticated: true, user: data });
+      toast.success("User successfully registered!");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      const { error } = err.response.data;
+
       set({
         isError: true,
-        errorMessage: err.message || "An error occurred during registration",
+        errorMessage:
+          err.response.data.error || "An error occurred during registration",
       });
+
+      toast.error(error);
     } finally {
       set({ isLoading: false });
     }
@@ -70,13 +83,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       logout();
       set({ isAuthenticated: false, user: null });
+      toast.success("Successfully logged out!");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      const { error } = err.response.data;
+
       set({
         isError: true,
-        errorMessage: err.message || "An error occurred during logout",
+        errorMessage: error || "An error occurred during logout",
       });
+
+      toast.error(error);
     } finally {
       set({ isLoading: false });
     }

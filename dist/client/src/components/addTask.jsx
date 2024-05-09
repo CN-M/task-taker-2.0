@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddTask = void 0;
+const react_hot_toast_1 = __importDefault(require("react-hot-toast"));
 const authStore_1 = require("../lib/authStore");
 const AddTask = ({ task, setTask, todos, setTodos, }) => {
     const user = (0, authStore_1.useAuthStore)((state) => state.user);
@@ -40,6 +44,7 @@ const AddTask = ({ task, setTask, todos, setTodos, }) => {
         }
         catch (err) {
             console.error("Error:", err);
+            react_hot_toast_1.default.error("Error adding task");
         }
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,7 +58,7 @@ const AddTask = ({ task, setTask, todos, setTodos, }) => {
     });
     return (<div className="flex flex-col p-10 space-y-5">
       <form onSubmit={handleTask} className="flex flex-col space-y-3">
-        <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="text" placeholder="Take out the trash" value={task} onChange={handleChange}/>
+        <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="text" placeholder="Take out the trash" value={task} onChange={handleChange} required/>
         <button className="p-3 rounded-md bg-emerald-600 text-white" type="submit">
           Add Task
         </button>

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAuthStore = void 0;
 const axios_1 = __importDefault(require("axios"));
+const react_hot_toast_1 = __importDefault(require("react-hot-toast"));
 const zustand_1 = require("zustand");
 const user = JSON.parse(localStorage.getItem("user"));
 exports.useAuthStore = (0, zustand_1.create)((set) => ({
@@ -27,13 +28,16 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
         try {
             const data = yield login(userData);
             set({ isAuthenticated: true, user: data });
+            react_hot_toast_1.default.success("Successfully logged in!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
+            const { error } = err.response.data;
             set({
                 isError: true,
-                errorMessage: err.message || "An error occurred during login",
+                errorMessage: err.response.data.error || "An error occurred during login",
             });
+            react_hot_toast_1.default.error(error);
         }
         finally {
             set({ isLoading: false });
@@ -44,13 +48,16 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
         try {
             const data = yield register(userData);
             set({ isAuthenticated: true, user: data });
+            react_hot_toast_1.default.success("User successfully registered!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
+            const { error } = err.response.data;
             set({
                 isError: true,
-                errorMessage: err.message || "An error occurred during registration",
+                errorMessage: err.response.data.error || "An error occurred during registration",
             });
+            react_hot_toast_1.default.error(error);
         }
         finally {
             set({ isLoading: false });
@@ -61,13 +68,16 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
         try {
             logout();
             set({ isAuthenticated: false, user: null });
+            react_hot_toast_1.default.success("Successfully logged out!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (err) {
+            const { error } = err.response.data;
             set({
                 isError: true,
-                errorMessage: err.message || "An error occurred during logout",
+                errorMessage: error || "An error occurred during logout",
             });
+            react_hot_toast_1.default.error(error);
         }
         finally {
             set({ isLoading: false });
