@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import helmet from "helmet";
-// import { authMiddleware } from "./config/auth";
 
 dotenv.config();
 
@@ -14,7 +13,7 @@ import { catch404, errorHandler } from "./middleware/errorMiddleware";
 import taskRoute from "./routes/taskRoute";
 import userRoute from "./routes/userRoute";
 
-const { PORT, SECRET } = process.env;
+const { PORT } = process.env;
 const port = PORT || 8000;
 
 const app: Express = express();
