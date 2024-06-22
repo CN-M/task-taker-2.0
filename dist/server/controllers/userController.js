@@ -12,15 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.loginUser = exports.registerUser = void 0;
+exports.deleteUser = exports.updateUser = exports.refreshUser = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
+const util_1 = require("../config/util");
 require("dotenv").config();
-const { SECRET } = process.env;
-const generateToken = (id) => {
-    return jsonwebtoken_1.default.sign({ id }, SECRET, { expiresIn: "5d" });
-};
+const { REFRESH_SECRET, NODE_ENV } = process.env;
+require("dotenv").config();
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, firstName, lastName, password } = req.body;
@@ -44,13 +43,32 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
         if (newUser) {
             const { id, firstName, lastName, email } = newUser;
-            const token = generateToken(id);
+            const accessToken = (0, util_1.generateAccessToken)({
+                id,
+                firstName,
+                lastName,
+                email,
+            });
+            const refreshToken = (0, util_1.generateRefreshToken)({
+                id,
+                firstName,
+                lastName,
+                email,
+            });
+            res
+                .cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: NODE_ENV === "production",
+                sameSite: NODE_ENV === "production" ? "strict" : "lax",
+                maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
+            })
+                .header("authorization", accessToken);
             return res.status(201).json({
                 id,
                 firstName,
                 lastName,
                 email,
-                token,
+                accessToken,
             });
         }
         else {
@@ -80,13 +98,32 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(400).json({ error: "Invalid credentials" });
         }
         const { id, firstName, lastName, email: userEmail } = user;
-        const token = generateToken(id);
+        const accessToken = (0, util_1.generateAccessToken)({
+            id,
+            firstName,
+            lastName,
+            email,
+        });
+        const refreshToken = (0, util_1.generateRefreshToken)({
+            id,
+            firstName,
+            lastName,
+            email,
+        });
+        res
+            .cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: NODE_ENV === "production",
+            sameSite: NODE_ENV === "production" ? "strict" : "lax",
+            maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
+        })
+            .header("authorization", accessToken);
         return res.status(201).json({
             id,
             firstName,
             lastName,
             email: userEmail,
-            token,
+            accessToken,
         });
     }
     catch (err) {
@@ -95,27 +132,49 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.loginUser = loginUser;
-// export const getAllUsers = async (req: Request, res: Response) => {
-//   try {
-//     const users = await prisma.user.findMany();
-//     res.status(200).json(users);
-//   } catch (err) {
-//     console.error("Error fetching users:", err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
-// export const getOneUser = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     const user = await prisma.user.findFirst({
-//       where: { id: Number(id) },
-//     });
-//     res.status(200).json(user);
-//   } catch (err) {
-//     console.error("Error fetching user data:", err);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
+const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("logout console:", req.cookies["refreshToken"]);
+        res.clearCookie("refreshToken");
+        return res.status(200).json({ message: "User successfully logged out" });
+    }
+    catch (err) {
+        console.error("Error logging out user:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.logoutUser = logoutUser;
+const refreshUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const refreshToken = req.cookies["refreshToken"];
+    if (!refreshToken) {
+        return res.status(401).json({ error: "Not authorised, no refresh token!" });
+    }
+    try {
+        const { id } = jsonwebtoken_1.default.verify(refreshToken, REFRESH_SECRET);
+        const user = yield db_1.prisma.user.findFirst({
+            where: { id },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                password: false,
+            },
+        });
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+        const newAccessToken = (0, util_1.generateAccessToken)(user);
+        console.log("New User successfully refreshed");
+        res.header("authorization", newAccessToken);
+        req.user = user;
+    }
+    catch (err) {
+        console.error("Error:", err);
+        return res.status(401).json({ error: "Invalid refresh token" });
+    }
+});
+exports.refreshUser = refreshUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName } = req.body;

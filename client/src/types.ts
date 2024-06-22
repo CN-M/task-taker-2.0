@@ -10,5 +10,6 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  token: string;
+  accessToken: string;
+  timestamp: number;
 }

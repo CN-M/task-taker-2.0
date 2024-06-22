@@ -30,8 +30,9 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
+                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.accessToken}`,
                 },
+                credentials: "include",
             });
             if (res.ok) {
                 const result = todos.filter((todo) => todo.id !== id);
@@ -51,8 +52,9 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
+                    Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.accessToken}`,
                 },
+                credentials: "include",
             });
             if (res.ok) {
                 const result = todos.map((todo) => todo.id === id ? Object.assign(Object.assign({}, todo), { completed: !todo.completed }) : todo);
@@ -70,14 +72,40 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         if (isError) {
             react_hot_toast_1.default.error(errorMessage);
         }
+        const MAX_AGE = 14 * 24 * 60 * 60 * 1000; // 14 days
+        (0, utils_1.checkAndDeleteExpiredItem)("user", MAX_AGE);
+        // if (!refreshToken) {
+        //   localStorage.removeItem("user");
+        // }
+        // if (!refreshToken) {
+        //   localStorage.removeItem("user");
+        // }
+        // const refreshUserToken = async () => {
+        //   try {
+        //     const res = await fetch("http://localhost:3000/account/refresh", {
+        //       // const res = await fetch("http://localhost:3000/test", {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${user?.accessToken}`,
+        //       },
+        //       credentials: "include",
+        //     });
+        //     const data = await res.json();
+        //     console.log(data);
+        //   } catch (err) {
+        //     console.error("Error", err);
+        //   }
+        // };
         const getData = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const res = yield fetch("http://localhost:3000/", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.token}`,
+                        Authorization: `Bearer ${user === null || user === void 0 ? void 0 : user.accessToken}`,
                     },
+                    credentials: "include",
                 });
                 const data = yield res.json();
                 setTodos(data);
@@ -93,6 +121,7 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         }
         else {
             getData();
+            // refreshUserToken();
         }
     }, [
         user,

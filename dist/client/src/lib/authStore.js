@@ -63,10 +63,10 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
             set({ isLoading: false });
         }
     }),
-    logout: () => {
+    logout: () => __awaiter(void 0, void 0, void 0, function* () {
         set({ isLoading: true, isError: false, errorMessage: "" });
         try {
-            logout();
+            yield logout();
             set({ isAuthenticated: false, user: null });
             react_hot_toast_1.default.success("Successfully logged out!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,10 +82,10 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
         finally {
             set({ isLoading: false });
         }
-    },
+    }),
 }));
 const register = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield axios_1.default.post("http://localhost:3000/account/register", userData);
+    const response = yield axios_1.default.post("http://localhost:3000/account/register", userData, { withCredentials: true });
     if (response.data) {
         const { data } = response;
         localStorage.setItem("user", JSON.stringify(data));
@@ -96,16 +96,26 @@ const register = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const login = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield axios_1.default.post("http://localhost:3000/account/login", userData);
+    const response = yield axios_1.default.post("http://localhost:3000/account/login", userData, { withCredentials: true });
     if (response.data) {
         const { data } = response;
-        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(Object.assign(Object.assign({}, data), { timestamp: new Date().getTime() })));
         return data;
     }
     else {
         throw new Error("Login failed");
     }
 });
-const logout = () => {
-    localStorage.removeItem("user");
-};
+const logout = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield axios_1.default.post("http://localhost:3000/account/logout", {
+        withCredentials: true,
+    });
+    if (response.data) {
+        const { data } = response;
+        localStorage.removeItem("user");
+        return data;
+    }
+    else {
+        throw new Error("Logout failed");
+    }
+});

@@ -18,6 +18,10 @@ curl -X POST http://localhost:3000/account/login \
 -H 'Content-Type: application/json' \
 -d '{"email": "jake@gmail.com", "password": "12345"}'
 
+curl -X POST http://localhost:8000/login \
+-H 'Content-Type: application/json' \
+-d '{"username": "admin", "password": "admin123"}'
+
 curl -X POST http://localhost:3000/ \
 -H 'Content-Type: application/json' \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzE1MDg4NTM5LCJleHAiOjE3MTU1MjA1Mzl9.MmFgIdyaShYPhfruyBhzcS1qkfdv9cfVWh3YjzjygKM" \

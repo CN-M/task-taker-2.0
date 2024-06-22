@@ -18,7 +18,7 @@ export const AddTask = ({
 
   const addTask = async () => {
     try {
-      if (!user || !user.token) {
+      if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
       }
 
@@ -26,9 +26,10 @@ export const AddTask = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.accessToken}`,
         },
         body: JSON.stringify({ task }),
+        credentials: "include",
       });
 
       if (!res.ok) {

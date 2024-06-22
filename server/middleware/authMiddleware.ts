@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken";
 import { prisma } from "../config/db";
+
+import { generateAccessToken } from "../config/util";
 
 require("dotenv").config();
 
-const { SECRET } = process.env;
+const { SECRET, REFRESH_SECRET } = process.env;
 
 declare global {
   namespace Express {
@@ -15,11 +17,7 @@ declare global {
       lastName: string;
       //   password: string | null;
     }
-  }
-}
 
-declare global {
-  namespace Express {
     interface Request {
       user?: User;
     }
@@ -31,44 +29,72 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
-  let token;
+  let accessToken =
+    req.headers.authorization && req.headers.authorization.startsWith("Bearer")
+      ? req.headers.authorization.split(" ")[1]
+      : null;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
+  let refreshToken = req.cookies["refreshToken"]
+    ? req.cookies["refreshToken"]
+    : null;
 
-      const { id } = jwt.verify(token, SECRET!) as JwtPayload;
+  if (!accessToken || !refreshToken) {
+    return res.status(401).json({ error: "Not authorized, no tokens" });
+  }
 
-      const user = await prisma.user.findFirst({
-        where: { id },
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-          password: false,
-        },
-      });
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
+  try {
+    const { id } = jwt.verify(accessToken, SECRET!) as JwtPayload;
+
+    const user = await prisma.user.findFirst({
+      where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        password: false,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    if (err instanceof TokenExpiredError) {
+      try {
+        const { id } = jwt.verify(refreshToken, REFRESH_SECRET!) as JwtPayload;
+
+        const user = await prisma.user.findFirst({
+          where: { id },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            password: false,
+          },
+        });
+
+        if (!user) {
+          return res.status(400).json({ error: "User not found" });
+        }
+
+        const newAccessToken = generateAccessToken(user);
+        console.log("New Access Token Generated");
+
+        res.header("authorization", newAccessToken);
+        req.user = user;
+        next();
+      } catch (err) {
+        console.error("Error:", err);
+        return res.status(401).json({ error: "Invalid refresh token" });
       }
-
-      req.user = user;
-
-      next();
-    } catch (err) {
+    } else {
       console.error("Error:", err);
       return res.status(401).json({ error: "Not authorized" });
     }
-  }
-
-  if (!token) {
-    const error = new Error("Not authorized, no token");
-    res.status(401).send(error.message);
-    console.error("Error:", error);
-    return;
   }
 };

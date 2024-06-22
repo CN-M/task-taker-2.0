@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
+
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
-import { cn } from "../lib/utils";
+import { checkAndDeleteExpiredItem, cn } from "../lib/utils";
 import { Todo } from "../types";
 
 export const Display = ({
@@ -28,8 +29,9 @@ export const Display = ({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.accessToken}`,
         },
+        credentials: "include",
       });
 
       if (res.ok) {
@@ -51,8 +53,9 @@ export const Display = ({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: `Bearer ${user?.accessToken}`,
         },
+        credentials: "include",
       });
 
       if (res.ok) {
@@ -76,14 +79,45 @@ export const Display = ({
       toast.error(errorMessage);
     }
 
+    const MAX_AGE = 14 * 24 * 60 * 60 * 1000; // 14 days
+
+    checkAndDeleteExpiredItem("user", MAX_AGE);
+
+    // if (!refreshToken) {
+    //   localStorage.removeItem("user");
+    // }
+
+    // if (!refreshToken) {
+    //   localStorage.removeItem("user");
+    // }
+
+    // const refreshUserToken = async () => {
+    //   try {
+    //     const res = await fetch("http://localhost:3000/account/refresh", {
+    //       // const res = await fetch("http://localhost:3000/test", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${user?.accessToken}`,
+    //       },
+    //       credentials: "include",
+    //     });
+    //     const data = await res.json();
+    //     console.log(data);
+    //   } catch (err) {
+    //     console.error("Error", err);
+    //   }
+    // };
+
     const getData = async () => {
       try {
         const res = await fetch("http://localhost:3000/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.token}`,
+            Authorization: `Bearer ${user?.accessToken}`,
           },
+          credentials: "include",
         });
         const data = await res.json();
 
@@ -99,6 +133,7 @@ export const Display = ({
       navigate("/login");
     } else {
       getData();
+      // refreshUserToken();
     }
   }, [
     user,

@@ -78,10 +78,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  logout: () => {
+  logout: async () => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
-      logout();
+      await logout();
       set({ isAuthenticated: false, user: null });
       toast.success("Successfully logged out!");
 
@@ -109,7 +109,8 @@ const register = async (userData: {
 }) => {
   const response = await axios.post(
     "http://localhost:3000/account/register",
-    userData
+    userData,
+    { withCredentials: true }
   );
 
   if (response.data) {
@@ -124,18 +125,33 @@ const register = async (userData: {
 const login = async (userData: { email: string; password: string }) => {
   const response = await axios.post(
     "http://localhost:3000/account/login",
-    userData
+    userData,
+    { withCredentials: true }
   );
 
   if (response.data) {
     const { data } = response;
-    localStorage.setItem("user", JSON.stringify(data));
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ ...data, timestamp: new Date().getTime() })
+    );
     return data;
   } else {
     throw new Error("Login failed");
   }
 };
 
-const logout = () => {
-  localStorage.removeItem("user");
+const logout = async () => {
+  const response = await axios.post("http://localhost:3000/account/logout", {
+    withCredentials: true,
+  });
+
+  if (response.data) {
+    const { data } = response;
+    localStorage.removeItem("user");
+    return data;
+  } else {
+    throw new Error("Logout failed");
+  }
 };
