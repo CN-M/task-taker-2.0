@@ -26,7 +26,7 @@ export const LoginForm = () => {
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
-    const loginData = { email, password };
+    const loginData = { email: email.toLowerCase(), password };
 
     const result = loginSchema.safeParse(loginData);
 

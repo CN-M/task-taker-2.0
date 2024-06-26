@@ -24,6 +24,31 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
     isLoading: false,
     user: user ? user : null,
     errorMessage: "",
+    // loginAsGuest: async (userData: { email: string; password: string }) => {
+    loginAsGuest: () => __awaiter(void 0, void 0, void 0, function* () {
+        set({ isLoading: true, isError: false, errorMessage: "" });
+        try {
+            const guestUserData = {
+                email: "batman@wayne.com",
+                password: "SUPERMANSUCKS",
+            };
+            const data = yield login(guestUserData);
+            set({ isAuthenticated: true, user: data, isGuest: true });
+            react_hot_toast_1.default.success("Guest successfully logged in!");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }
+        catch (err) {
+            const { error } = err.response.data;
+            set({
+                isError: true,
+                errorMessage: err.response.data.error || "An error occurred during login",
+            });
+            react_hot_toast_1.default.error(error);
+        }
+        finally {
+            set({ isLoading: false });
+        }
+    }),
     login: (userData) => __awaiter(void 0, void 0, void 0, function* () {
         set({ isLoading: true, isError: false, errorMessage: "" });
         try {
@@ -69,6 +94,26 @@ exports.useAuthStore = (0, zustand_1.create)((set) => ({
         try {
             yield logout();
             set({ isAuthenticated: false, user: null });
+            react_hot_toast_1.default.success("Successfully logged out!");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }
+        catch (err) {
+            const { error } = err.response.data;
+            set({
+                isError: true,
+                errorMessage: error || "An error occurred during logout",
+            });
+            react_hot_toast_1.default.error(error);
+        }
+        finally {
+            set({ isLoading: false });
+        }
+    }),
+    logoutGuest: () => __awaiter(void 0, void 0, void 0, function* () {
+        set({ isLoading: true, isError: false, errorMessage: "" });
+        try {
+            yield logout();
+            set({ isAuthenticated: false, user: null, isGuest: false });
             react_hot_toast_1.default.success("Successfully logged out!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }

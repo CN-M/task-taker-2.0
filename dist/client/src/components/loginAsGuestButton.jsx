@@ -18,17 +18,18 @@ const LoginAsGuestButton = () => {
     const isAuthenticated = (0, authStore_1.useAuthStore)((state) => state.isAuthenticated);
     const isGuest = (0, authStore_1.useAuthStore)((state) => state.isGuest);
     const isLoading = (0, authStore_1.useAuthStore)((state) => state.isLoading);
-    const logout = (0, authStore_1.useAuthStore)((state) => state.logout);
+    const logoutGuest = (0, authStore_1.useAuthStore)((state) => state.logoutGuest);
+    const loginAsGuest = (0, authStore_1.useAuthStore)((state) => state.loginAsGuest);
     const isError = (0, authStore_1.useAuthStore)((state) => state.isError);
     const errorMessage = (0, authStore_1.useAuthStore)((state) => state.errorMessage);
     const handleLogout = () => __awaiter(void 0, void 0, void 0, function* () {
-        logout();
+        logoutGuest();
         navigate("/login");
     });
-    return (<div hidden={!isGuest} className="bg-blue-500 rounded-lg px-5 py-2">
+    return (<div hidden={isAuthenticated && !isGuest} className="bg-blue-500 rounded-lg px-5 py-2">
       {user && isAuthenticated ? (<button className="" onClick={handleLogout} disabled={isLoading}>
           {isLoading ? "Logging Out..." : "Logout"}
-        </button>) : (<button className="" onClick={() => navigate("/login")}>
+        </button>) : (<button className="" onClick={() => loginAsGuest()}>
           Login as Guest
         </button>)}
       {isError && <p className="text-red-500 text-sm">{errorMessage}</p>}

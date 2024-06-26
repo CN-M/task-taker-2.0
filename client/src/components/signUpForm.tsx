@@ -28,7 +28,12 @@ export const SignUpForm = () => {
   const handleRegister = async (e: any) => {
     e.preventDefault();
 
-    const registerData = { firstName, lastName, email, password };
+    const registerData = {
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      password,
+    };
 
     const result = registerSchema.safeParse(registerData);
 

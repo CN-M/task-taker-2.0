@@ -32,7 +32,7 @@ const LoginForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleLogin = (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
-        const loginData = { email, password };
+        const loginData = { email: email.toLowerCase(), password };
         const result = validations_1.loginSchema.safeParse(loginData);
         if (!result.success) {
             const errorMessages = result.error.errors.map((error) => error.message);

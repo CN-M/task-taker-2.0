@@ -34,7 +34,12 @@ const SignUpForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleRegister = (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
-        const registerData = { firstName, lastName, email, password };
+        const registerData = {
+            firstName,
+            lastName,
+            email: email.toLowerCase(),
+            password,
+        };
         const result = validations_1.registerSchema.safeParse(registerData);
         if (!result.success) {
             const errorMessages = result.error.errors.map((error) => error.message);
