@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "server/server.ts",
+  "main": "server.ts",
   "scripts": {
     "test": "vitest",
     "build": "npx tsc",
