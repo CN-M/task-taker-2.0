@@ -67,7 +67,7 @@ export const registerUser = async (req: Request, res: Response) => {
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: NODE_ENV === "production",
-          sameSite: NODE_ENV === "production" ? "strict" : "lax",
+          sameSite: "lax",
           maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
         })
         .header("authorization", accessToken);
@@ -137,7 +137,7 @@ export const loginUser = async (req: Request, res: Response) => {
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: NODE_ENV === "production",
-        sameSite: NODE_ENV === "production" ? "strict" : "lax",
+        sameSite: "lax",
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
       })
       .header("authorization", accessToken);
