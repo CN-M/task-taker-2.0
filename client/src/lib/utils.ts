@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { User } from "../types";
 
 const { VITE_ENV, VITE_BACKEND_URL } = import.meta.env;
+console.log(VITE_BACKEND_URL);
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,10 +23,12 @@ export const checkAndDeleteExpiredItem = (key: string, maxAge: number) => {
   }
 };
 
+
 export const CrootURL =
-  VITE_ENV === "production" ? VITE_BACKEND_URL : "http://localhost:5173";
+  VITE_ENV === "production" ? VITE_BACKEND_URL : "http://localhost:3000";
 
 export const rootURL =
   VITE_ENV === "development"
-    ? "http://localhost:5173"
+    ? "http://localhost:3000"
     : "https://task-taker-2-0-backend.vercel.app";
+

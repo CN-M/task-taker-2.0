@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 import { checkAndDeleteExpiredItem, cn, rootURL } from "../lib/utils";
 import { Todo } from "../types";
+const { VITE_ENV, VITE_BACKEND_URL } = import.meta.env;
 
 export const Display = ({
   todos,
@@ -24,7 +25,7 @@ export const Display = ({
 
   const deleteTask = async (id: number) => {
     try {
-      const res = await fetch(`${rootURL}/${id}`, {
+      const res = await fetch(`${rootURL}/tasks/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +49,7 @@ export const Display = ({
 
   const updateTask = async (id: number) => {
     try {
-      const res = await fetch(`${rootURL}/${id}`, {
+      const res = await fetch(`${rootURL}/tasks/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -74,6 +75,9 @@ export const Display = ({
   };
 
   useEffect(() => {
+    console.log(VITE_ENV);
+  console.log(VITE_BACKEND_URL);
+
     if (isError) {
       toast.error(errorMessage);
     }
@@ -110,7 +114,7 @@ export const Display = ({
 
     const getData = async () => {
       try {
-        const res = await fetch(rootURL, {
+        const res = await fetch(`${rootURL}/tasks`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

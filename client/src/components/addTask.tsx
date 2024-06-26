@@ -33,7 +33,7 @@ export const AddTask = ({
         throw new Error(errorMessages.join(", "));
       }
 
-      const res = await fetch(rootURL, {
+      const res = await fetch(`${rootURL}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

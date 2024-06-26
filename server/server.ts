@@ -48,7 +48,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/account", userRoute);
-app.use("/", taskRoute);
+app.use("/tasks", taskRoute);
 
 // Error Middleware
 app.use(catch404);
