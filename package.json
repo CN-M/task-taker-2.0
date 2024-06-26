@@ -1,6 +1,7 @@
 {
   "name": "task-taker-2.0",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "server/server.ts",
   "scripts": {
@@ -11,7 +12,8 @@
     "dev-server": "nodemon server/server.ts",
     "client": "pnpm run --prefix client dev",
     "dev": "concurrently \"npx tsc --watch\" \"ts-node server/server.ts\" \"pnpm run client\"",
-    "prod": "concurrently \"pnpm run start\" \"pnpm run client\""
+    "prod": "concurrently \"pnpm run start\" \"pnpm run client\"",
+    "postinstall": "prisma generate --schema=./server/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
