@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../lib/authStore";
+import { rootURL } from "../lib/utils";
 import { taskSchema } from "../lib/validations";
 import { Todo } from "../types";
 
@@ -32,7 +33,7 @@ export const AddTask = ({
         throw new Error(errorMessages.join(", "));
       }
 
-      const res = await fetch("http://localhost:3000/", {
+      const res = await fetch(rootURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

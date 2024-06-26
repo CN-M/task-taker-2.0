@@ -1,9 +1,8 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
-
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
-import { checkAndDeleteExpiredItem, cn } from "../lib/utils";
+import { checkAndDeleteExpiredItem, cn, rootURL } from "../lib/utils";
 import { Todo } from "../types";
 
 export const Display = ({
@@ -25,7 +24,7 @@ export const Display = ({
 
   const deleteTask = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:3000/${id}`, {
+      const res = await fetch(`${rootURL}/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +48,7 @@ export const Display = ({
 
   const updateTask = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:3000/${id}`, {
+      const res = await fetch(`${rootURL}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +110,7 @@ export const Display = ({
 
     const getData = async () => {
       try {
-        const res = await fetch("http://localhost:3000/", {
+        const res = await fetch(rootURL, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
