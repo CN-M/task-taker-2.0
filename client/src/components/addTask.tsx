@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../lib/authStore";
 import { taskSchema } from "../lib/validations";
@@ -16,6 +16,7 @@ export const AddTask = ({
   setTodos: Dispatch<SetStateAction<Todo[]>>;
 }) => {
   const user = useAuthStore((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addTask = async () => {
     try {
@@ -55,6 +56,7 @@ export const AddTask = ({
       setTodos([...todos, newTodo]);
       setTask("");
 
+      setIsLoading(false);
       return data;
     } catch (err) {
       console.error("Error:", err);
@@ -68,6 +70,7 @@ export const AddTask = ({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleTask = async (e: any) => {
+    setIsLoading(true);
     e.preventDefault();
     await addTask();
   };
@@ -87,8 +90,9 @@ export const AddTask = ({
         <button
           className="p-3 rounded-md bg-emerald-600 text-white"
           type="submit"
+          disabled={isLoading}
         >
-          Add Task
+          {isLoading ? "Adding Task..." : "Add Task"}
         </button>
       </form>
     </div>
