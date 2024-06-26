@@ -13,6 +13,7 @@ exports.LoginForm = void 0;
 const react_1 = require("react");
 const react_router_dom_1 = require("react-router-dom");
 const authStore_1 = require("../lib/authStore");
+const validations_1 = require("../lib/validations");
 const LoginForm = () => {
     const navigate = (0, react_router_dom_1.useNavigate)();
     const [email, setEmail] = (0, react_1.useState)("");
@@ -31,7 +32,14 @@ const LoginForm = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleLogin = (e) => __awaiter(void 0, void 0, void 0, function* () {
         e.preventDefault();
-        login({ email, password });
+        const loginData = { email, password };
+        const result = validations_1.loginSchema.safeParse(loginData);
+        if (!result.success) {
+            const errorMessages = result.error.errors.map((error) => error.message);
+            alert(errorMessages.join("\n"));
+            return;
+        }
+        login(loginData);
     });
     return (<div className="flex flex-col items-center p-10 space-y-5">
       <h2 className="text-2xl font-sans font-semibold">
@@ -40,7 +48,7 @@ const LoginForm = () => {
       <div className="flex flex-col items-center">
         <form onSubmit={handleLogin} className="flex flex-col space-y-3">
           <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="email" placeholder="hulk@hogan.com" value={email} autoComplete="email" onChange={(e) => setEmail(e.target.value)} required/>
-          <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="password" autoComplete="current-password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+          <input className="border p-2 border-emerald-500 rounded-md focus:border-blue-500" type="password" autoComplete="current-password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required min={5}/>
           <button className="p-3 rounded-md bg-emerald-600 text-white" type="submit" disabled={isLoading}>
             {isLoading ? "Logging In..." : "Log In"}
           </button>

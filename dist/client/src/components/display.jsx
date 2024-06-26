@@ -132,7 +132,7 @@ const Display = ({ todos, setTodos, isLoading, setIsLoading, }) => {
         isError,
         errorMessage,
     ]);
-    return (<div className=" ">
+    return (<div className="flex flex-col items-center">
       {user && isAuthenticated ? (<h2 className="text-xl p-5 font-semibold">
           Hey, {user.firstName}! Here are your tasks:
         </h2>) : (<></>)}

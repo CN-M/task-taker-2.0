@@ -7,6 +7,7 @@ const user = JSON.parse(localStorage.getItem("user")!);
 
 interface AuthState {
   isAuthenticated: boolean;
+  isGuest: boolean;
   isError: boolean;
   isLoading: boolean;
   user: User | null;
@@ -23,6 +24,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: user ? true : false,
+  isGuest: false,
   isError: false,
   isLoading: false,
   user: user ? user : null,

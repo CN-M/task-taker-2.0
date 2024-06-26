@@ -146,7 +146,7 @@ export const Display = ({
   ]);
 
   return (
-    <div className=" ">
+    <div className="flex flex-col items-center">
       {user && isAuthenticated ? (
         <h2 className="text-xl p-5 font-semibold">
           Hey, {user.firstName}! Here are your tasks:

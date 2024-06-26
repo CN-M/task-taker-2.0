@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
+import { taskSchema } from "../config/validations";
 
 export const getTasks = async (req: Request, res: Response) => {
   if (!req.user) {
@@ -16,7 +17,6 @@ export const getTasks = async (req: Request, res: Response) => {
     });
 
     res.status(200).json(tasks);
-    // }
   } catch (err) {
     console.error("Error fetching tasks:", err);
     res.status(500).json({ error: "Internal server error." });
@@ -24,14 +24,19 @@ export const getTasks = async (req: Request, res: Response) => {
 };
 
 export const createTask = async (req: Request, res: Response) => {
-  const { task } = req.body;
-
   if (!req.user) {
     return res
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
 
+  const parsedData = taskSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    const errorMessages = parsedData.error.errors.map((error) => error.message);
+    return res.status(400).json({ error: errorMessages.join(", ") });
+  }
+
+  const { task } = parsedData.data;
   const { id: userId } = req.user;
 
   try {
@@ -50,14 +55,13 @@ export const createTask = async (req: Request, res: Response) => {
 };
 
 export const updateTask = async (req: Request, res: Response) => {
-  const { id: taskId } = req.params;
-
   if (!req.user) {
     return res
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
 
+  const { id: taskId } = req.params;
   const { id: userId } = req.user;
 
   try {
@@ -84,14 +88,13 @@ export const updateTask = async (req: Request, res: Response) => {
 };
 
 export const deleteTask = async (req: Request, res: Response) => {
-  const { id: taskId } = req.params;
-
   if (!req.user) {
     return res
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
 
+  const { id: taskId } = req.params;
   const { id: userId } = req.user;
 
   try {

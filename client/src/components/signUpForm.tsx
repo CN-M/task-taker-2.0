@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
+import { registerSchema } from "../lib/validations";
 
 export const SignUpForm = () => {
   const navigate = useNavigate();
@@ -26,7 +27,18 @@ export const SignUpForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    register({ email, firstName, lastName, password });
+
+    const registerData = { firstName, lastName, email, password };
+
+    const result = registerSchema.safeParse(registerData);
+
+    if (!result.success) {
+      const errorMessages = result.error.errors.map((error) => error.message);
+      alert(errorMessages.join("\n"));
+      return;
+    }
+
+    register(registerData);
   };
 
   return (
@@ -47,6 +59,7 @@ export const SignUpForm = () => {
               value={firstName}
               onChange={(e) => setFirstname(e.target.value)}
               required
+              min={1}
             />
             <input
               className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
@@ -55,6 +68,7 @@ export const SignUpForm = () => {
               value={lastName}
               onChange={(e) => setLastname(e.target.value)}
               required
+              min={1}
             />
           </div>
           <input
@@ -74,6 +88,7 @@ export const SignUpForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            min={5}
           />
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"

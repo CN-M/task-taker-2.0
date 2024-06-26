@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../lib/authStore";
+import { taskSchema } from "../lib/validations";
 import { Todo } from "../types";
 
 export const AddTask = ({
@@ -22,13 +23,21 @@ export const AddTask = ({
         throw new Error("User not authenticated or token not available.");
       }
 
+      const parsedData = taskSchema.safeParse({ task });
+      if (!parsedData.success) {
+        const errorMessages = parsedData.error.errors.map(
+          (error) => error.message
+        );
+        throw new Error(errorMessages.join(", "));
+      }
+
       const res = await fetch("http://localhost:3000/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.accessToken}`,
         },
-        body: JSON.stringify({ task }),
+        body: JSON.stringify({ task: parsedData.data.task }),
         credentials: "include",
       });
 
@@ -49,7 +58,7 @@ export const AddTask = ({
       return data;
     } catch (err) {
       console.error("Error:", err);
-      toast.error("Error adding task");
+      toast.error((err as Error).message || "Error adding task");
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,6 +82,7 @@ export const AddTask = ({
           value={task}
           onChange={handleChange}
           required
+          min={1}
         />
         <button
           className="p-3 rounded-md bg-emerald-600 text-white"

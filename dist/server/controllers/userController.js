@@ -17,12 +17,18 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
 const util_1 = require("../config/util");
+const validations_1 = require("../config/validations");
 require("dotenv").config();
 const { REFRESH_SECRET, NODE_ENV } = process.env;
 require("dotenv").config();
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, firstName, lastName, password } = req.body;
+        const parsedData = validations_1.registerSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            const errorMessages = parsedData.error.errors.map((error) => error.message);
+            return res.status(400).json({ error: errorMessages.join(", ") });
+        }
+        const { email, firstName, lastName, password } = parsedData.data;
         if (!email || !firstName || !lastName || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }
@@ -83,7 +89,12 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.registerUser = registerUser;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
+        const parsedData = validations_1.loginSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            const errorMessages = parsedData.error.errors.map((error) => error.message);
+            return res.status(400).json({ error: errorMessages.join(", ") });
+        }
+        const { email, password } = parsedData.data;
         if (!email || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }

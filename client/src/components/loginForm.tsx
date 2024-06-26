@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
+import { loginSchema } from "../lib/validations";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
@@ -24,7 +25,18 @@ export const LoginForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    login({ email, password });
+
+    const loginData = { email, password };
+
+    const result = loginSchema.safeParse(loginData);
+
+    if (!result.success) {
+      const errorMessages = result.error.errors.map((error) => error.message);
+      alert(errorMessages.join("\n"));
+      return;
+    }
+
+    login(loginData);
   };
 
   return (
@@ -51,6 +63,7 @@ export const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            min={5}
           />
           <button
             className="p-3 rounded-md bg-emerald-600 text-white"

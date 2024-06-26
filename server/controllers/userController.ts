@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../config/db";
 import { generateAccessToken, generateRefreshToken } from "../config/util";
+import { loginSchema, registerSchema } from "../config/validations";
 
 require("dotenv").config();
 
@@ -12,7 +13,15 @@ require("dotenv").config();
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { email, firstName, lastName, password } = req.body;
+    const parsedData = registerSchema.safeParse(req.body);
+    if (!parsedData.success) {
+      const errorMessages = parsedData.error.errors.map(
+        (error) => error.message
+      );
+      return res.status(400).json({ error: errorMessages.join(", ") });
+    }
+
+    const { email, firstName, lastName, password } = parsedData.data;
 
     if (!email || !firstName || !lastName || !password) {
       return res.status(400).json({ error: "Please fill in all fields" });
@@ -81,7 +90,15 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const parsedData = loginSchema.safeParse(req.body);
+    if (!parsedData.success) {
+      const errorMessages = parsedData.error.errors.map(
+        (error) => error.message
+      );
+      return res.status(400).json({ error: errorMessages.join(", ") });
+    }
+
+    const { email, password } = parsedData.data;
 
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill in all fields" });

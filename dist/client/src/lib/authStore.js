@@ -19,6 +19,7 @@ const zustand_1 = require("zustand");
 const user = JSON.parse(localStorage.getItem("user"));
 exports.useAuthStore = (0, zustand_1.create)((set) => ({
     isAuthenticated: user ? true : false,
+    isGuest: false,
     isError: false,
     isLoading: false,
     user: user ? user : null,

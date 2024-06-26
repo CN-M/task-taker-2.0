@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.createTask = exports.getTasks = void 0;
 const db_1 = require("../config/db");
+const validations_1 = require("../config/validations");
 const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {
         return res
@@ -23,7 +24,6 @@ const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             where: { authorId: id },
         });
         res.status(200).json(tasks);
-        // }
     }
     catch (err) {
         console.error("Error fetching tasks:", err);
@@ -32,12 +32,17 @@ const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTasks = getTasks;
 const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { task } = req.body;
     if (!req.user) {
         return res
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
+    const parsedData = validations_1.taskSchema.safeParse(req.body);
+    if (!parsedData.success) {
+        const errorMessages = parsedData.error.errors.map((error) => error.message);
+        return res.status(400).json({ error: errorMessages.join(", ") });
+    }
+    const { task } = parsedData.data;
     const { id: userId } = req.user;
     try {
         const newTask = yield db_1.prisma.task.create({
@@ -55,12 +60,12 @@ const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createTask = createTask;
 const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: taskId } = req.params;
     if (!req.user) {
         return res
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
+    const { id: taskId } = req.params;
     const { id: userId } = req.user;
     try {
         const task = yield db_1.prisma.task.findFirst({
@@ -84,12 +89,12 @@ const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.updateTask = updateTask;
 const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id: taskId } = req.params;
     if (!req.user) {
         return res
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
+    const { id: taskId } = req.params;
     const { id: userId } = req.user;
     try {
         const task = yield db_1.prisma.task.findFirst({
