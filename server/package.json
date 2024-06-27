@@ -26,12 +26,12 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "prettier": "^3.2.5",
-    "prisma": "^5.11.0",
+    "prisma": "^5.16.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@prisma/client": "5.11.0",
+    "@prisma/client": "5.16.1",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "compression": "^1.7.4",
