@@ -1,107 +1,171 @@
-# Task-Taker-2.0 📝
+# Task Taker 2.0
 
-Task-Taker-2.0 is a modern web application designed to help you manage your tasks efficiently. It utilizes React with Vite in the frontend, Zustand for state management, Express.js as the backend framework, 🐘 Postgres as the database with Prisma as the ORM, and Typescript for both frontend and backend development. It also implements secure authentication using email credentials login with 🔐 JSON Web Tokens (JWT).
+Task Taker 2.0 is a comprehensive Todo List application allowing users to manage their tasks efficiently. Users can register, log in, and manage tasks by creating, deleting, and marking them as complete.
 
 ## Features
 
-- **Efficient Task Management**: Organize your tasks effectively with Task-Taker-2.0. Create, update, and delete tasks seamlessly.
-- **Secure Authentication**: Safely login to your account using email credentials. Task-Taker-2.0 employs JSON Web Tokens (JWT) for secure authentication.
-- **Responsive User Interface**: Enjoy a smooth user experience across various devices with Task-Taker-2.0's responsive design.
+- **User Authentication:** Register, Login, Logout
+- **Task Management:** Create, View, Delete, Mark as Complete
+- **Protected Routes:** Secure routes with JWT access tokens
+- **Token Refresh:** Automatic refresh of expired tokens
 
-## Installation
+## Tech Stack
 
-To run Task-Taker-2.0 locally, follow these steps:
+### Frontend
 
-1. Clone the repository:
+- **Framework:** Vite
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Library:** React
+- **State Management:** Zustand
+- **Form Validation:** Zod
 
+### Backend
+
+- **Framework:** Node.js, Express
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication:** Bcrypt for password hashing, JWT for tokens
+- **Validation:** Zod
+
+## Screenshots
+
+### Dashboard
+![Dashboard](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/dashboard.png)
+
+### Login Page
+![Login Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/login.png)
+
+### Register Page
+![Register Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/register.png)
+
+## Getting Started
+
+Follow these instructions to set up the project locally.
+
+### Prerequisites
+
+- **pnpm:** Make sure pnpm is installed globally.
+
+### Installation
+
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/CN-M/Task-Taker-2.0.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
    cd Task-Taker-2.0
    ```
 
-3. Install dependencies for both the backend and frontend:
-
+2. **Install dependencies for both client and server:**
    ```bash
-   npm install
    cd client
-   npm install
-   cd ..
+   pnpm install
+   cd ../server
+   pnpm install
    ```
 
-4. Rename `.env.example` to `.env` and fill in the necessary environment variables:
+3. **Setup environment variables:**
 
+   **Server:**
+   Create a `.env` file in the root directory of the server and add the following variables:
+   ```env
+   PORT="3000"
+   SECRET="your-secret"
+   REFFRESH_SECRET="your-refresh-secret"
+   NODE_ENV="development"
+   DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+   ```
+
+   **Client:**
+   Create a `.env` file in the root directory of the client and add the following variables:
+   ```env
+   VITE_ENV="development"
+   VITE_BACKEND_URL="http://localhost:3000"
+   ```
+
+   > Use `openssl rand -base64 32` to generate random `SECRET` and `REFFRESH_SECRET`.
+
+4. **Run Prisma migrations:**
    ```bash
-   mv .env.example .env
+   cd server
+   pnpm prisma migrate dev
    ```
 
-5. Start the development servers:
+### Running the Application
 
-   ```bash
-   npm run dev
-   ```
+You can run the application using the following scripts from the root of the project:
 
-6. Access Task-Taker-2.0 in your browser:
 
-   - **Frontend**: http://localhost:5173
-   - **Backend**: http://localhost:3000
+- **Start Client:**
+  ```bash
+  pnpm client
+  ```
 
-## Backend Overview
+- **Start Server:**
+  ```bash
+  pnpm server
+  ```
 
-The backend of Task-Taker-2.0 is built using Express.js. It provides RESTful API endpoints for tasks and user authentication.
+- **Run Both Client and Server in Development Mode:**
+  ```bash
+  pnpm dev
+  ```
 
-### Endpoints
+- **Preview Build:**
+  ```bash
+  pnpm preview
+  ```
 
-- **GET /account/login**: Login endpoint for users.
-- **POST /account/register**: Register endpoint for new users.
-- **GET /**: Get all tasks for the authenticated user.
-- **POST /**: Create a new task for the authenticated user.
-- **PUT /:id**: Update a task with the specified ID.
-- **DELETE /:id**: Delete a task with the specified ID.
+### Default Ports
 
-## Frontend Overview
-
-The frontend of Task-Taker-2.0 is developed using React with Vite. Zustand is used for state management, providing a seamless user experience.
-
-### Routes
-
-The client-side routing in Task-Taker-2.0 allows users to navigate between different pages seamlessly. Here are the available routes and the corresponding pages:
-
-- **Dashboard (/)**: The dashboard page displays the user's tasks and provides options to create, update, and delete tasks.
-- **Login (/login)**: The login page allows users to authenticate themselves by entering their email and password.
-- **Register (/register)**: The register page enables new users to create an account by providing their personal information and choosing a password.
-
-With these routes, users can easily navigate through the application, manage their tasks, and interact with the authentication system to access their accounts.
+- **Backend:** `http://localhost:3000`
+- **Frontend:** `http://localhost:5173`
 
 ### Folder Structure
 
 ```
-Task-Taker-2.0/
-├── client/                 # Frontend code
-│   ├── public/             # Public assets
-│   └── src/                # Source files
-│       ├── components/     # Reusable UI components
-│       ├── pages/          # Page components for different routes
-│       ├── App.css         # Global CSS styles
-│       ├── App.tsx         # Main component rendering routes
-│       └── main.tsx       # Entry point for the React application
-├── dist/                   # Compiled backend code
-├── server/                 # Backend code
-│   ├── controllers/        # Request handlers
-│   ├── middleware/         # Custom middleware
-│   ├── routes/             # Route definitions
-│   ├── config/             # Configuration files
-│   └── server.ts              # Express app entry point
-├── .env.example            # Environment variables template
-├── package.json            # Project dependencies and scripts
-└── README.md               # Project documentation
-
+├── README.md
+├── client
+│   ├── README.md
+│   ├── index.html
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── postcss.config.js
+│   ├── public
+│   ├── src
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
+├── package.json
+├── pnpm-lock.yaml
+├── prompt.txt
+└── server
+    ├── config
+    ├── controllers
+    ├── middleware
+    ├── package.json
+    ├── pnpm-lock.yaml
+    ├── prisma
+    ├── routes
+    ├── server.ts
+    └── tsconfig.json
 ```
 
-## Contributors
+### Pages
 
-- [CN-M](https://github.com/CN-M)
+- **Login:** `/login`
+- **Register:** `/register`
+- **Dashboard:** `/`
+
+## Repository
+
+[GitHub Repository](https://github.com/CN-M/Task-Taker-2.0.git)
+
+## Author
+
+CN-M
+
+---
+
+This README provides a detailed overview of the Task Taker 2.0 project, including setup instructions, features, tech stack, and scripts to manage the project.

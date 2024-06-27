@@ -15,7 +15,6 @@ declare global {
       email: string;
       firstName: string;
       lastName: string;
-      //   password: string | null;
     }
 
     interface Request {

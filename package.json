@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "server/dist/server.js",
+  "main": "server/server.ts",
   "scripts": {
     "test": "vitest",
     "client": "pnpm run --prefix client dev",

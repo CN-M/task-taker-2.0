@@ -86,32 +86,6 @@ export const Display = ({
 
     checkAndDeleteExpiredItem("user", MAX_AGE);
 
-    // if (!refreshToken) {
-    //   localStorage.removeItem("user");
-    // }
-
-    // if (!refreshToken) {
-    //   localStorage.removeItem("user");
-    // }
-
-    // const refreshUserToken = async () => {
-    //   try {
-    //     const res = await fetch("http://localhost:3000/account/refresh", {
-    //       // const res = await fetch("http://localhost:3000/test", {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Bearer ${user?.accessToken}`,
-    //       },
-    //       credentials: "include",
-    //     });
-    //     const data = await res.json();
-    //     console.log(data);
-    //   } catch (err) {
-    //     console.error("Error", err);
-    //   }
-    // };
-
     const getData = async () => {
       try {
         const res = await fetch(`${rootURL}/tasks`, {
@@ -136,7 +110,6 @@ export const Display = ({
       navigate("/login");
     } else {
       getData();
-      // refreshUserToken();
     }
   }, [
     user,
@@ -151,9 +124,12 @@ export const Display = ({
   return (
     <div className="flex flex-col items-center">
       {user && isAuthenticated ? (
+        <>
         <h2 className="text-xl p-5 font-semibold">
           Hey, {user.firstName}! Here are your tasks:
         </h2>
+        <p className="pb-5" >Hint: Double click on a task to mark it complete.</p>
+        </>
       ) : (
         <></>
       )}
