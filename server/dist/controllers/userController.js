@@ -136,7 +136,6 @@ const loginUser = async (req, res) => {
 exports.loginUser = loginUser;
 const logoutUser = async (req, res) => {
     try {
-        console.log("logout console:", req.cookies["refreshToken"]);
         res.clearCookie("refreshToken");
         return res.status(200).json({ message: "User successfully logged out" });
     }
