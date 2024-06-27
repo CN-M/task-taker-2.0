@@ -2,6 +2,9 @@
   "name": "task-taker-2.0",
   "version": "1.0.0",
   "type": "module",
+  "prisma": {
+    "schema": "./server/prisma/schema.prisma"
+  },
   "description": "",
   "main": "server/server.ts",
   "scripts": {
