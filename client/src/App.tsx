@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Router>
-        <div className="h-screen w-full flex flex-col  items-center space-y-4">
+        <div className="h-screen w-full flex flex-col justify-between items-center space-y-4">
           <Navbar />
           <Routes>
             <Route path="/" element={<Dashboard />} />
