@@ -21,10 +21,11 @@ const node_env = NODE_ENV || "development";
 
 const app: Express = express();
 app.set("trust proxy", 1);
+// ? ["https://task-taker-2-0.vercel.app/"]
 
 const allowedOrigins =
   node_env === "production"
-    ? ["https://task-taker-2-0.vercel.app/"]
+    ? ["https://task-taker-2-0.onrender.com"]
     : ["http://localhost:5173", "http://127.0.0.1:5173"];
 
 // Middleware
