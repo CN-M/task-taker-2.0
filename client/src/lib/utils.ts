@@ -23,5 +23,6 @@ export const checkAndDeleteExpiredItem = (key: string, maxAge: number) => {
 };
 
 
-export const rootURL =
-VITE_ENV === "production" ? "https://task-taker-2-0.onrender.com" : "http://localhost:3000" 
+export const rootURL = "task-taker-20-production.up.railway.app" 
+// VITE_ENV === "production" ? "task-taker-20-production.up.railway.app" : "http://localhost:3000" 
+// VITE_ENV === "production" ? "https://task-taker-2-0.onrender.com" : "http://localhost:3000" 
