@@ -23,10 +23,5 @@ export const checkAndDeleteExpiredItem = (key: string, maxAge: number) => {
 };
 
 
-export const CrootURL =
-  VITE_ENV === "production" ? VITE_BACKEND_URL : "http://localhost:3000";
-
 export const rootURL =
-  VITE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://task-taker-2-0-backend.vercel.app";
+  VITE_ENV === "production" ? VITE_BACKEND_URL : "http://localhost:3000" 

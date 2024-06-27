@@ -139,7 +139,6 @@ You can run the application using the following scripts from the root of the pro
 │   └── vite.config.ts
 ├── package.json
 ├── pnpm-lock.yaml
-├── prompt.txt
 └── server
     ├── config
     ├── controllers
