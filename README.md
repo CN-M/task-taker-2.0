@@ -32,13 +32,13 @@ Task Taker 2.0 is a comprehensive Todo List application allowing users to manage
 ## Screenshots
 
 ### Dashboard
-![Dashboard](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/dashboard.png)
+![Dashboard](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/dashboard.bmp)
 
 ### Login Page
-![Login Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/login.png)
+![Login Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/login.bmp)
 
 ### Register Page
-![Register Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/register.png)
+![Register Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/register.bmp)
 
 ## Getting Started
 
@@ -167,5 +167,3 @@ You can run the application using the following scripts from the root of the pro
 CN-M
 
 ---
-
-This README provides a detailed overview of the Task Taker 2.0 project, including setup instructions, features, tech stack, and scripts to manage the project.
