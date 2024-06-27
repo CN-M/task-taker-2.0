@@ -17,7 +17,7 @@ RUN pnpm install
 COPY . .
 
 # Generate Prisma Client
-RUN pnpm run prisma generate
+RUN pnpm prisma generate
 
 # Build TypeScript code
 RUN pnpm run build
