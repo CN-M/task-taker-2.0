@@ -9,6 +9,7 @@
   "main": "server/server.ts",
   "scripts": {
     "test": "vitest",
+    "seed": "ts-node server/prisma/seed.ts",
     "client": "pnpm run --prefix client dev",
     "server": "pnpm run --prefix server dev",
     "build-client": "pnpm run --prefix client build",

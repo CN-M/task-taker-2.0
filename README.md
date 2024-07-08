@@ -73,7 +73,7 @@ I use pnpm in my local environment, and I use it in this README, but any package
    ```env
    PORT="3000"
    SECRET="your-secret"
-   REFFRESH_SECRET="your-refresh-secret"
+   REFRESH_SECRET="your-refresh-secret"
    NODE_ENV="development"
    DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
    ```
@@ -95,6 +95,12 @@ I use pnpm in my local environment, and I use it in this README, but any package
    ```bash
    cd server
    pnpm prisma migrate dev
+   ```
+
+5. **Seed Guest User:**
+   ```bash
+   cd ..
+   pnpm seed
    ```
 
 ### Running the Application
