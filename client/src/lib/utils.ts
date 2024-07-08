@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { User } from "../types";
 
-const { VITE_ENV, VITE_BACKEND_URL } = import.meta.env;
+// const { VITE_ENV, VITE_BACKEND_URL } = import.meta.env;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

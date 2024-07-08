@@ -46,7 +46,8 @@ Follow these instructions to set up the project locally.
 
 ### Prerequisites
 
-- **pnpm:** Make sure pnpm is installed globally.
+- Any package manager, i.e. **pnpm**, **npm**, or **yarn**
+I use pnpm in my local environment, and I use it in this README, but any package manager should work.
 
 ### Installation
 
@@ -56,8 +57,9 @@ Follow these instructions to set up the project locally.
    cd Task-Taker-2.0
    ```
 
-2. **Install dependencies for both client and server:**
+2. **Install dependencies for the client, server, and root directory:**
    ```bash
+   pnpm install
    cd client
    pnpm install
    cd ../server
@@ -75,6 +77,12 @@ Follow these instructions to set up the project locally.
    NODE_ENV="development"
    DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
    ```
+   > Hint: Use the CLI command `openssl rand -base64 32` to generate random secrets for `SECRET` and `REFFRESH_SECRET`.
+
+   - By default, the project uses PostgreSQL as a database and so asks for a PostgreSQL database URL.
+   - If you need a quick Postrgres database you can spin up an instance on [Neon](https://neon.tech) or [Railway](https://railway.app/).
+
+   - Alternatively, you can adjust the `server/prisma/schema.prisma` file to your preferred database and it should work about the same when given a database url. (I haven't tested this though so let's hope it doesn't break)
 
    **Client:**
    Create a `.env` file in the root directory of the client and add the following variables:
@@ -82,8 +90,6 @@ Follow these instructions to set up the project locally.
    VITE_ENV="development"
    VITE_BACKEND_URL="http://localhost:3000"
    ```
-
-   > Use `openssl rand -base64 32` to generate random `SECRET` and `REFFRESH_SECRET`.
 
 4. **Run Prisma migrations:**
    ```bash
