@@ -46,8 +46,7 @@ Follow these instructions to set up the project locally.
 
 ### Prerequisites
 
-- Any package manager, i.e. **pnpm**, **npm**, or **yarn**
-I use pnpm in my local environment, and I use it in this README, but any package manager should work.
+- Any package manager, i.e. **pnpm**, **npm**, or **yarn**. I use pnpm in my local environment, and I use it in this README, but any package manager should work.
 
 ### Installation
 
@@ -57,7 +56,7 @@ I use pnpm in my local environment, and I use it in this README, but any package
    cd Task-Taker-2.0
    ```
 
-2. **Install dependencies for the client, server, and root directory, and create .env file:**
+2. **Install dependencies for the client, server, and root directory:**
    ```bash
    pnpm install
    cd client
@@ -69,7 +68,8 @@ I use pnpm in my local environment, and I use it in this README, but any package
 3. **Setup environment variables:**
 
    **Server:**
-   Create a `.env` file in the root directory of the `server` directory and add the following variables (Make sure you fill in the missing stuff):
+   Create a `.env` file in the root of the `server` directory and add the following variables (Make sure you fill in the missing stuff):
+   > Hint: Use the CLI command `openssl rand -base64 32` to generate random secrets for `SECRET` and `REFFRESH_SECRET`.
    ```env
    PORT="3000"
    SECRET="your-secret"
@@ -77,7 +77,6 @@ I use pnpm in my local environment, and I use it in this README, but any package
    NODE_ENV="development"
    DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
    ```
-   > Hint: Use the CLI command `openssl rand -base64 32` to generate random secrets for `SECRET` and `REFFRESH_SECRET`.
 
    - By default, the project uses PostgreSQL as a database and so asks for a PostgreSQL database URL.
    - If you need a quick Postrgres database you can spin up an instance on [Neon](https://neon.tech) or [Railway](https://railway.app/).
@@ -85,7 +84,7 @@ I use pnpm in my local environment, and I use it in this README, but any package
    - Alternatively, you can adjust the `server/prisma/schema.prisma` file to your preferred database and it should work about the same when given a database url. (I haven't tested this though so let's hope it doesn't break)
 
    **Client:**
-   Create a `.env` file in the root directory of the `client` directory and add the following variables:
+   Create a `.env` file in the root of the `client` directory and add the following variables:
    ```env
    VITE_ENV="development"
    VITE_BACKEND_URL="http://localhost:3000"
@@ -117,11 +116,6 @@ You can run the application using the following scripts from the root of the pro
 - **Run Both Client and Server in Development Mode:**
   ```bash
   pnpm dev
-  ```
-
-- **Preview Build:**
-  ```bash
-  pnpm preview
   ```
 
 ### Default Ports
