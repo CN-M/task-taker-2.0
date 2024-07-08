@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const guestUserData = {
         email: "batman@wayne.com",
-        password: "SUPERMANSUCKS",
+        password: "SUPERMAN-SUCKZ",
       };
 
       const data: User = await login(guestUserData);

@@ -57,7 +57,7 @@ I use pnpm in my local environment, and I use it in this README, but any package
    cd Task-Taker-2.0
    ```
 
-2. **Install dependencies for the client, server, and root directory:**
+2. **Install dependencies for the client, server, and root directory, and create .env file:**
    ```bash
    pnpm install
    cd client
@@ -69,7 +69,7 @@ I use pnpm in my local environment, and I use it in this README, but any package
 3. **Setup environment variables:**
 
    **Server:**
-   Create a `.env` file in the root directory of the server and add the following variables:
+   Create a `.env` file in the root directory of the `server` directory and add the following variables (Make sure you fill in the missing stuff):
    ```env
    PORT="3000"
    SECRET="your-secret"
@@ -85,20 +85,16 @@ I use pnpm in my local environment, and I use it in this README, but any package
    - Alternatively, you can adjust the `server/prisma/schema.prisma` file to your preferred database and it should work about the same when given a database url. (I haven't tested this though so let's hope it doesn't break)
 
    **Client:**
-   Create a `.env` file in the root directory of the client and add the following variables:
+   Create a `.env` file in the root directory of the `client` directory and add the following variables:
    ```env
    VITE_ENV="development"
    VITE_BACKEND_URL="http://localhost:3000"
    ```
 
-4. **Run Prisma migrations:**
+4. **Run Prisma migrations and Seed Guest User:**
    ```bash
    cd server
    pnpm prisma migrate dev
-   ```
-
-5. **Seed Guest User:**
-   ```bash
    cd ..
    pnpm seed
    ```

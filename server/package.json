@@ -8,7 +8,7 @@
     "build": "pnpm tsc",
     "watch": "pnpm tsc --watch",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev server.ts"
+    "dev": "ts-node server.ts"
   },
   "keywords": [],
   "author": "",
