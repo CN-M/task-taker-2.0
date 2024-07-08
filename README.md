@@ -2,6 +2,9 @@
 
 Task Taker 2.0 is a comprehensive Todo List application allowing users to manage their tasks efficiently. Users can register, log in, and manage tasks by creating, deleting, and marking them as complete.
 
+### Dashboard
+![Dashboard](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/dashboard.bmp)
+
 ## Features
 
 - **User Authentication:** Register, Login, Logout
@@ -30,9 +33,6 @@ Task Taker 2.0 is a comprehensive Todo List application allowing users to manage
 - **Validation:** Zod
 
 ## Screenshots
-
-### Dashboard
-![Dashboard](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/dashboard.bmp)
 
 ### Login Page
 ![Login Page](https://github.com/CN-M/task-taker-2.0/blob/main/screenshots/login.bmp)
