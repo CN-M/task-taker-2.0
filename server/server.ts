@@ -21,12 +21,8 @@ const node_env = NODE_ENV || "development";
 
 const app: Express = express();
 app.set("trust proxy", 1);
-// ? ["https://task-taker-2-0.vercel.app/"]
 
-const allowedOrigins =
-  node_env === "production"
-    ? [CLIENT_ROOT_URL]
-    : ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = [CLIENT_ROOT_URL, "http://localhost:5173", "http://127.0.0.1:5173"];
 
 // Middleware
 app.use(morgan("dev"));
