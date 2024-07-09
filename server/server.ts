@@ -15,7 +15,7 @@ import { catch404, errorHandler } from "./middleware/errorMiddleware";
 import taskRoute from "./routes/taskRoute";
 import userRoute from "./routes/userRoute";
 
-const { PORT, NODE_ENV, ROOT_URL } = process.env;
+const { PORT, NODE_ENV, CLIENT_ROOT_URL } = process.env;
 const port = PORT || 3000;
 const node_env = NODE_ENV || "development";
 
@@ -25,7 +25,7 @@ app.set("trust proxy", 1);
 
 const allowedOrigins =
   node_env === "production"
-    ? ["task-taker-20-production.up.railway.app"]
+    ? [CLIENT_ROOT_URL]
     : ["http://localhost:5173", "http://127.0.0.1:5173"];
 
 // Middleware

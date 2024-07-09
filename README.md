@@ -75,6 +75,7 @@ Follow these instructions to set up the project locally.
    SECRET="your-secret"
    REFRESH_SECRET="your-refresh-secret"
    NODE_ENV="development"
+   CLIENT_ROOT_URL="http://localhost:5173"
    DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
    ```
 
