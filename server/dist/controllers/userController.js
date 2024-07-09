@@ -56,7 +56,7 @@ const registerUser = async (req, res) => {
                 .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: NODE_ENV === "production",
-                sameSite: "lax",
+                sameSite: "none",
                 maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
             })
                 .header("authorization", accessToken);
@@ -116,7 +116,7 @@ const loginUser = async (req, res) => {
             .cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
         })
             .header("authorization", accessToken);
