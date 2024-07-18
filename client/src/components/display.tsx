@@ -23,7 +23,15 @@ export const Display = ({
   const errorMessage = useAuthStore((state) => state.errorMessage);
 
   const deleteTask = async (id: number) => {
+    const originalTodos = [...todos];
     try {
+      if (!user || !user.accessToken) {
+        throw new Error("User not authenticated or token not available.");
+      }
+
+      const result = originalTodos.filter((todo) => todo.id !== id);
+      setTodos(result);
+
       const res = await fetch(`${rootURL}/tasks/${id}`, {
         method: "DELETE",
         headers: {
@@ -33,21 +41,27 @@ export const Display = ({
         credentials: "include",
       });
 
-      if (res.ok) {
-        const result = todos.filter((todo) => todo.id !== id);
-        setTodos(result);
-      }
-
       const data = await res.json();
       return data;
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error deleting task");
+      setTodos(originalTodos);
     }
   };
 
   const updateTask = async (id: number) => {
+    const originalTodos = [...todos];
     try {
+      if (!user || !user.accessToken) {
+        throw new Error("User not authenticated or token not available.");
+      }
+
+      const result = originalTodos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      );
+      setTodos(result);
+
       const res = await fetch(`${rootURL}/tasks/${id}`, {
         method: "PUT",
         headers: {
@@ -57,19 +71,12 @@ export const Display = ({
         credentials: "include",
       });
 
-      if (res.ok) {
-        const result = todos.map((todo) =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        );
-
-        setTodos(result);
-      }
-
       const data = await res.json();
       return data;
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error updating task");
+      setTodos(originalTodos);
     }
   };
 
@@ -121,10 +128,12 @@ export const Display = ({
     <div className="flex flex-col items-center">
       {user && isAuthenticated ? (
         <>
-        <h2 className="text-xl p-5 font-semibold">
-          Hey, {user.firstName}! Here are your tasks:
-        </h2>
-        <p className="pb-5" >Hint: Double click on a task to mark it complete.</p>
+          <h2 className="text-xl p-5 font-semibold">
+            Hey, {user.firstName}! Here are your tasks:
+          </h2>
+          <p className="pb-5">
+            Hint: Double click on a task to mark it complete.
+          </p>
         </>
       ) : (
         <></>

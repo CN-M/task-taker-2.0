@@ -19,6 +19,8 @@ export const AddTask = ({
   const user = useAuthStore((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
 
+  const originalTodos = [...todos];
+
   const addTask = async () => {
     try {
       if (!user || !user.accessToken) {
@@ -33,6 +35,16 @@ export const AddTask = ({
         throw new Error(errorMessages.join(", "));
       }
 
+      const tempId = Math.floor(Math.random() * 100_000);
+
+      const newTodo: Todo = {
+        id: tempId,
+        task: parsedData.data.task,
+      };
+
+      setTodos([...originalTodos, newTodo]);
+      setTask("");
+
       const res = await fetch(`${rootURL}/tasks`, {
         method: "POST",
         headers: {
@@ -43,25 +55,23 @@ export const AddTask = ({
         credentials: "include",
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to add task!");
-      }
-
       const data = await res.json();
 
-      const newTodo: Todo = {
-        id: data.id,
-        task: task,
-      };
+      const actualId = data.id;
 
-      setTodos([...todos, newTodo]);
-      setTask("");
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === tempId ? { ...todo, id: actualId } : todo
+        )
+      );
 
-      setIsLoading(false);
       return data;
     } catch (err) {
       console.error("Error:", err);
       toast.error((err as Error).message || "Error adding task");
+      setTodos(originalTodos);
+    } finally {
+      setIsLoading(false);
     }
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

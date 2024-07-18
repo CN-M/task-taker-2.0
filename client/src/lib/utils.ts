@@ -22,6 +22,5 @@ export const checkAndDeleteExpiredItem = (key: string, maxAge: number) => {
   }
 };
 
-
 export const rootURL =
   VITE_ENV === "production" ? VITE_BACKEND_URL : "http://localhost:3000";

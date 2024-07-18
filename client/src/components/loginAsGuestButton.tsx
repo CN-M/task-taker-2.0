@@ -29,7 +29,7 @@ export const LoginAsGuestButton = () => {
         </button>
       ) : (
         <button className="" onClick={() => loginAsGuest()}>
-          Login as Guest
+          {isLoading ? "Logging In..." : "Login as Guest"}
         </button>
       )}
       {isError && <p className="text-red-500 text-sm">{errorMessage}</p>}
